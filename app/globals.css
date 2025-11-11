@@ -1,46 +1,75 @@
-@import "tailwindcss/preflight";
-@import "tailwindcss/utilities";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-/* root sizing */
-html, body, :root { height: 100%; }
-
-/* design tokens / CSS variables */
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-  --muted: #6b7280;
-  --accent: #2563eb;
-  --radius: 0.5rem;
-}
-
-/* dark mode via the `.dark` selector defined in `tailwind.config.ts` */
-.dark {
-  --background: #0a0a0a;
-  --foreground: #ededed;
-  --muted: #9ca3af;
-  --accent: #60a5fa;
-}
-
-/* prefers-color-scheme fallback (will be overridden by .dark when present) */
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    /* Cores de fundo e texto */
+    --background: 0 0% 100%; /* Branco */
+    --foreground: 0 0% 0%; /* Preto #000000 */
+
+    /* Cards */
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 0%;
+
+    /* Popover */
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 0%;
+
+    /* Primary - Azul Fink #0055FF */
+    --primary: 220 100% 50%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Secondary - Azul 2 #87A9FA */
+    --secondary: 222 92% 75%;
+    --secondary-foreground: 0 0% 0%;
+
+    /* Accent - Verde Fink #6ADCC5 */
+    --accent: 168 62% 64%;
+    --accent-foreground: 0 0% 0%;
+
+    /* Muted - Cinza 1 #9D9D9D */
+    --muted: 0 0% 62%;
+    --muted-foreground: 0 0% 0%;
+
+    /* Destructive - pode manter vermelho padrão */
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+
+    /* Borders - Cinza 2 #D0D0D0 */
+    --border: 0 0% 82%;
+    --input: 0 0% 82%;
+
+    /* Ring - Azul Fink */
+    --ring: 220 100% 50%;
+
+    /* Radius */
+    --radius: 0.5rem;
+
+    /* Charts - Usando as cores da paleta */
+    --chart-1: 220 100% 50%; /* Azul Fink */
+    --chart-2: 168 62% 64%; /* Verde Fink */
+    --chart-3: 222 92% 75%; /* Azul 2 */
+    --chart-4: 223 95% 93%; /* Azul 3 */
+    --chart-5: 161 66% 79%; /* Verde 2 */
   }
 }
 
-/* base styles */
-body {
-  background-color: var(--background);
-  color: var(--foreground);
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-  line-height: 1.5;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  transition: background-color 160ms linear, color 160ms linear;
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family:
+      Inter,
+      ui-sans-serif,
+      system-ui,
+      -apple-system,
+      'Segoe UI',
+      Roboto,
+      'Helvetica Neue',
+      Arial,
+      sans-serif;
+  }
 }
-
-/* small accessibility niceties */
-a { color: var(--accent); }
-::selection { background-color: rgba(37,99,235,0.12); color: var(--foreground); }
-
