@@ -11,7 +11,7 @@ export function FilterBar() {
   const greeting = getGreetingByHour(date.getHours());
 
   return (
-    <div className='container mx-auto px-0 py-4'>
+    <div className='container py-4'>
       <div className='flex items-center justify-between'>
         {/* Saudação */}
         <div>

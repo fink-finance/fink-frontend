@@ -8,7 +8,7 @@ import { Navbar } from './shared/Navbar';
 export function Header() {
   return (
     <header className='w-full bg-zinc-50 pt-4'>
-      <div className='container mx-auto flex h-16 items-center justify-between px-0'>
+      <div className='container flex h-16 items-center justify-between'>
         {/* Logo */}
         <Link href='/home' aria-label='Fink Home'>
           <MainLogo />

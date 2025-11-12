@@ -1,48 +1,24 @@
-import PluggyButton from "@/components/home/PluggyButton";
+import { MetasCard } from './MetasCard';
+import { GastoCard } from './GastoCard';
+import { SaldoCard } from './SaldoCard';
+import { ContasCard } from './ContasCard';
+import { InvestimentosCard } from './InvestimentosCard';
 
 export const CardsGrid = () => {
   return (
     <>
       {/* Grid de Cards */}
-      <div className='container mx-auto px-0 pb-8'>
+      <div className='container pb-8'>
         <div className='grid grid-cols-1 gap-6 lg:grid-cols-12'>
-          {/* Linha 1: Saldo do mês + Meus gastos + Metas */}
-          <div className='lg:col-span-4'>
-            <div className='h-[350px] rounded-lg border bg-white p-6 shadow-sm'>
-              <h2 className='text-lg font-semibold'>Saldo do mês</h2>
-              {/* TODO: Adicionar conteúdo */}
-            </div>
-          </div>
+          <SaldoCard />
 
-          <div className='lg:col-span-4'>
-            <div className='h-[350px] rounded-lg border bg-white p-6 shadow-sm'>
-              <h2 className='text-lg font-semibold'>Meus gastos</h2>
-              {/* TODO: Adicionar conteúdo */}
-            </div>
-          </div>
+          <GastoCard />
 
-          <div className='lg:col-span-4'>
-            <div className='h-[350px] rounded-lg border bg-white p-6 shadow-sm'>
-              <h2 className='text-lg font-semibold'>Metas</h2>
-              {/* TODO: Adicionar conteúdo */}
-            </div>
-          </div>
+          <MetasCard />
 
-          {/* Linha 2: Minhas contas + Investimentos */}
-          <div className='lg:col-span-5'>
-            <div className='h-[280px] rounded-lg border bg-white p-6 shadow-sm'>
-              <h2 className='text-lg font-semibold'>Minhas contas</h2>
-              <PluggyButton />
-              {/* TODO: Adicionar conteúdo */}
-            </div>
-          </div>
+          <ContasCard />
 
-          <div className='lg:col-span-7'>
-            <div className='h-[280px] rounded-lg border bg-white p-6 shadow-sm'>
-              <h2 className='text-lg font-semibold'>Investimentos</h2>
-              {/* TODO: Adicionar conteúdo */}
-            </div>
-          </div>
+          <InvestimentosCard />
         </div>
       </div>
 

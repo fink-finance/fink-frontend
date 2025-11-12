@@ -5,7 +5,8 @@ export const Navbar = () => {
     <nav className='hidden md:flex items-center gap-6'>
       <Link
         href='/home/contas'
-        className='text-sm font-medium text-zinc-600 hover:text-zinc-900 transition-colors border-b-2 border-b-gray-600'
+        // className='text-sm font-medium text-zinc-600 hover:text-zinc-900 transition-colors border-b-2 border-b-gray-600'
+        className='text-sm font-medium text-zinc-600 hover:text-zinc-900 transition-colors'
       >
         Minhas contas
       </Link>

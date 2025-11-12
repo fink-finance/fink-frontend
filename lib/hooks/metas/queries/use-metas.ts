@@ -1,0 +1,52 @@
+/**
+ * Hook para listar metas
+ * GET /api/v1/metas/
+ */
+
+import { useQuery } from '@tanstack/react-query';
+import { api } from '@/lib/api/client';
+import { API_ENDPOINTS, buildUrl } from '@/lib/api/endpoints';
+import type { Meta, MetasFilters } from '@/lib/api/types';
+
+// Query Key Factory
+export const metasKeys = {
+  all: ['metas'] as const,
+  lists: () => [...metasKeys.all, 'list'] as const,
+  list: (filters?: MetasFilters) => [...metasKeys.lists(), filters] as const,
+  details: () => [...metasKeys.all, 'detail'] as const,
+  detail: (id: number) => [...metasKeys.details(), id] as const,
+  byPessoa: (id_pessoa: number) =>
+    [...metasKeys.all, 'by-pessoa', id_pessoa] as const,
+};
+
+// Hook para listar todas as metas
+export const useMetas = (filters?: MetasFilters) => {
+  return useQuery({
+    queryKey: metasKeys.list(filters),
+    queryFn: async (): Promise<Meta[]> => {
+      // TODO: Implementar quando houver paginação no backend
+      // const url = buildUrl(API_ENDPOINTS.METAS.LIST, filters);
+      const url = API_ENDPOINTS.METAS.LIST;
+
+      return api.get<Meta[]>(url);
+    },
+    // Configurações opcionais
+    staleTime: 5 * 60 * 1000, // 5 minutos
+    gcTime: 10 * 60 * 1000, // 10 minutos
+  });
+};
+
+// Hook alternativo com paginação (preparado para futuro)
+/*
+export const useMetasPaginated = (filters?: MetasFilters) => {
+  return useQuery({
+    queryKey: metasKeys.list(filters),
+    queryFn: async (): Promise<PaginatedResponse<Meta>> => {
+      const url = buildUrl(API_ENDPOINTS.METAS.LIST, filters);
+      return api.get<PaginatedResponse<Meta>>(url);
+    },
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
+  });
+};
+*/

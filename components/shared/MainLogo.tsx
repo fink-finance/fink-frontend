@@ -10,7 +10,7 @@ type MainLogoProps = {
 export const MainLogo = ({
   className = '',
   alt = '',
-  width = 80,
+  width = 100,
   height = 36,
 }: MainLogoProps) => {
   return (
