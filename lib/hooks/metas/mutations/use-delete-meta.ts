@@ -18,17 +18,12 @@ export const useDeleteMeta = () => {
       return api.delete<void>(url);
     },
     onSuccess: (_, deletedId) => {
-      // Buscar a meta que será deletada para obter fk_pessoa_id_pessoa
-      const deletedMeta = queryClient.getQueryData<Meta>(
-        metasKeys.detail(deletedId)
-      );
-
-      // Remover dos caches
+      // ✅ Remover dos caches
       queryClient.removeQueries({
         queryKey: metasKeys.detail(deletedId),
       });
 
-      // Remover da lista geral
+      // ✅ Remover da lista
       queryClient.setQueryData(
         metasKeys.lists(),
         (oldData: Meta[] | undefined) => {
@@ -37,27 +32,10 @@ export const useDeleteMeta = () => {
         }
       );
 
-      // Remover da lista de metas da pessoa
-      if (deletedMeta?.fk_pessoa_id_pessoa) {
-        queryClient.setQueryData(
-          metasKeys.byPessoa(deletedMeta.fk_pessoa_id_pessoa),
-          (oldData: Meta[] | undefined) => {
-            if (!oldData) return [];
-            return oldData.filter((meta) => meta.id_meta !== deletedId);
-          }
-        );
-      }
-
-      // Invalidar listas para garantir sincronização
+      // ✅ Invalidar listas para garantir sincronização
       queryClient.invalidateQueries({
         queryKey: metasKeys.lists(),
       });
-
-      if (deletedMeta?.fk_pessoa_id_pessoa) {
-        queryClient.invalidateQueries({
-          queryKey: metasKeys.byPessoa(deletedMeta.fk_pessoa_id_pessoa),
-        });
-      }
     },
     onError: (error) => {
       console.error('Erro ao deletar meta:', error);

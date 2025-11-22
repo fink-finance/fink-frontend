@@ -1,5 +1,3 @@
-'use client';
-
 import { Button } from '@/components/ui/button';
 import { FolderInput } from 'lucide-react';
 import { getFormattedDate } from '@/lib/utils/get-formatted-date';
@@ -11,12 +9,12 @@ export function FilterBar() {
   const greeting = getGreetingByHour(date.getHours());
 
   return (
-    <div className='container py-4'>
+    <div className='container py-8 w-full'>
       <div className='flex items-center justify-between'>
         {/* Saudação */}
         <div>
-          <p className='text-sm text-zinc-600'>{formattedDate}</p>
-          <h1 className='text-2xl font-bold text-zinc-900'>
+          <p className='text-md text-zinc-600'>{formattedDate}</p>
+          <h1 className='text-4xl font-semibold text-zinc-900'>
             {greeting}, Finker!
           </h1>
         </div>
@@ -39,7 +37,7 @@ export function FilterBar() {
           </div>
           <div className='flex items-center'>
             <Button size='lg'>
-              <FolderInput className='h-6 w-6' />
+              <FolderInput className='h-8 w-8' />
               Exportar dados
             </Button>
           </div>

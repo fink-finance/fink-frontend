@@ -28,9 +28,7 @@ export const addResponseInterceptor = (interceptor: ResponseInterceptor) => {
   responseInterceptors.push(interceptor);
 };
 
-// TODO: Implementar quando soubermos o formato do backend
-// Interceptor de autenticação (comentado por enquanto)
-/*
+// ✅ Interceptor de autenticação
 const authInterceptor: RequestInterceptor = (config) => {
   const token = getAuthToken();
   if (token) {
@@ -54,9 +52,8 @@ const clearAuthToken = (): void => {
   }
 };
 
-// Adicionar interceptor de auth automaticamente
+// ✅ Adicionar interceptor de auth automaticamente
 addRequestInterceptor(authInterceptor);
-*/
 
 // Função para tratar erros de resposta
 const handleErrorResponse = async (response: Response): Promise<never> => {
@@ -69,13 +66,15 @@ const handleErrorResponse = async (response: Response): Promise<never> => {
     errorMessage = response.statusText || errorMessage;
   }
 
-  // TODO: Implementar tratamento específico baseado no backend
-  /*
+  // ✅ Tratamento de erro 401 (não autorizado)
   if (response.status === 401) {
     clearAuthToken();
+    // Redirecionar para login se necessário
+    if (typeof window !== 'undefined') {
+      window.location.href = '/login';
+    }
     throw new Error('Token expirado. Faça login novamente.');
   }
-  */
 
   throw new Error(errorMessage);
 };

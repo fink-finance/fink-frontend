@@ -3,31 +3,37 @@ import { GastoCard } from './GastoCard';
 import { SaldoCard } from './SaldoCard';
 import { ContasCard } from './ContasCard';
 import { InvestimentosCard } from './InvestimentosCard';
+import { ChatAICard } from './ChatAICard';
 
 export const CardsGrid = () => {
   return (
     <>
       {/* Grid de Cards */}
-      <div className='container pb-8'>
-        <div className='grid grid-cols-1 gap-6 lg:grid-cols-12'>
-          <SaldoCard />
+      <div className='container pb-6'>
+        <div className='grid grid-cols-1 gap-6 [grid-auto-rows:minmax(300px,400px)] md:grid-cols-2 lg:grid-rows-4 lg:grid-cols-3 lg:h-[950px]'>
+          <div className='md:col-span-1 md:row-span-1 lg:col-start-1 lg:row-start-1 lg:row-span-2'>
+            <SaldoCard />
+          </div>
 
-          <GastoCard />
+          <div className='md:col-span-1 md:row-span-1 lg:col-start-2 lg:row-start-1 lg:row-span-2'>
+            <GastoCard />
+          </div>
 
-          <MetasCard />
+          <div className='md:col-span-1 md:row-span-1 lg:col-start-3 lg:row-start-1 lg:row-span-1'>
+            <MetasCard />
+          </div>
 
-          <ContasCard />
+          <div className='md:col-span-1 md:row-span-1 lg:col-start-1 lg:row-start-3 lg:row-span-2'>
+            <ContasCard />
+          </div>
 
-          <InvestimentosCard />
-        </div>
-      </div>
+          <div className='md:col-span-1 md:row-span-1 lg:col-start-2 lg:row-start-3 lg:row-span-2'>
+            <InvestimentosCard />
+          </div>
 
-      {/* Chat Finker - Fixed no canto inferior direito */}
-      <div className='fixed bottom-6 right-6'>
-        <div className='w-80 rounded-lg border bg-white p-4 shadow-lg'>
-          <h3 className='font-semibold'>Chat Finker</h3>
-          <p className='text-sm text-zinc-600'>Tire suas dúvidas aqui!</p>
-          {/* TODO: Adicionar chat */}
+          <div className='md:col-span-1 md:row-span-1 lg:col-start-3 lg:row-start-2 lg:row-span-3'>
+            <ChatAICard />
+          </div>
         </div>
       </div>
     </>

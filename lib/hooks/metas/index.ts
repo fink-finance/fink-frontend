@@ -4,7 +4,7 @@
  */
 
 // Queries (leitura)
-export { useMetas, useMeta, useMetasByPessoa, metasKeys } from './queries';
+export { useMetas, useMeta, metasKeys } from './queries';
 
 // Mutations (escrita)
 export { useCreateMeta, useUpdateMeta, useDeleteMeta } from './mutations';

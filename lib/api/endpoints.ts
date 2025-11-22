@@ -26,12 +26,11 @@ export const API_ENDPOINTS = {
 
   // Metas
   METAS: {
-    LIST: '/metas',
+    LIST: '/metas', // ✅ Lista metas do usuário autenticado
     CREATE: '/metas',
     GET_BY_ID: (id: string) => `/metas/${id}`,
     UPDATE: (id: string) => `/metas/${id}`,
     DELETE: (id: string) => `/metas/${id}`,
-    BY_PESSOA: (id_pessoa: string) => `/metas/pessoa/${id_pessoa}`,
   },
 
   // Planos
@@ -45,8 +44,11 @@ export const API_ENDPOINTS = {
     DEACTIVATE: (id: string) => `/planos/${id}/deactivate`,
   },
 
-  // Sessões
+  // Sessões (Autenticação)
   SESSOES: {
+    LOGIN: '/sessoes/login', // ✅ Login
+    VALIDATE: '/sessoes/validar', // ✅ Validar token
+    LOGOUT: '/sessoes/logout', // ✅ Logout
     LIST: '/sessoes',
     CREATE: '/sessoes',
     GET_BY_ID: (id: string) => `/sessoes/${id}`,

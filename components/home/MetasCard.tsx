@@ -1,53 +1,55 @@
 'use client';
 
-import { useMetasByPessoa } from '@/lib/hooks/metas';
+import { useMetas } from '@/lib/hooks/metas';
 import { DashboardCard } from '../shared/DashboardCard';
+import { toBRCurrency } from '@/lib/utils/to-br-currency';
+import { SpinLoader } from '../shared/SpinLoader';
 
 export const MetasCard = () => {
-  const { data: metas, isLoading, isError } = useMetasByPessoa(1);
+  const { data: metas, isLoading, isError } = useMetas();
 
   return (
-    <DashboardCard title='Metas' height='lg' colSpan={4}>
-      {isLoading && <p>Carregando metas...</p>}
+    <DashboardCard
+      title='Metas'
+      subtitle='O quão perto você está de realizar seus sonhos'
+      className='h-full'
+    >
+      {isLoading && <SpinLoader />}
       {isError && <p>Erro ao carregar metas.</p>}
 
       {metas && (
         <>
-          <p className='text-sm text-zinc-600 mb-4'>
-            O quão perto você está de realizar seus sonhos
-          </p>
-          <div className='mb-4'>
-            <div className='flex justify-between items-center'>
-              <span className='text-2xl font-bold'>R$ 1470,50</span>
-              <span className='text-sm text-zinc-600'>de R$ 4.000,00</span>
-            </div>
-            <p className='text-sm text-blue-600'>
-              Você já economizou R$ 1470,50
-            </p>
-          </div>
-
-          <div className='space-y-3'>
-            {metas.map((meta) => {
-              const progresso =
-                (Number(meta.valor_atual) / Number(meta.valor_alvo)) * 100;
-              return (
-                <div key={meta.titulo} className='space-y-2'>
-                  <div className='flex justify-between'>
-                    <span className='text-sm font-medium'>{meta.titulo}</span>
-                    <span className='text-sm text-zinc-600'>
-                      {progresso.toFixed(0)}%
-                    </span>
-                  </div>
-                  <div className='w-full bg-zinc-200 rounded-full h-2'>
-                    <div
-                      className='bg-blue-500 h-2 rounded-full transition-all'
-                      style={{ width: `${Math.min(progresso, 100)}%` }}
-                    />
-                  </div>
+          {metas.map((meta) => {
+            const progress =
+              (Number(meta.valor_atual) / Number(meta.valor_alvo)) * 100;
+            return (
+              <div key={meta.titulo} className='space-y-2 pt-5'>
+                <div className='flex justify-between pb-2'>
+                  <span className='font-bold text-3xl'>
+                    {toBRCurrency(Number(meta.valor_atual))}
+                  </span>
+                  <span className='text-md font-normal'>{meta.titulo}</span>
                 </div>
-              );
-            })}
-          </div>
+                <div className='w-full bg-emptyCardBg rounded-full h-3'>
+                  <div
+                    className='bg-blue-600 h-full rounded-full transition-all'
+                    style={{ width: `${Math.min(progress, 100)}%` }}
+                  />
+                </div>
+                <div className='flex justify-between'>
+                  <span className='text-base text-blue-600 font-medium'>
+                    Você já economizou{' '}
+                    <span className='font-bold'>
+                      {toBRCurrency(Number(meta.valor_atual))}
+                    </span>
+                  </span>
+                  <span className='text-gray-500'>
+                    de {toBRCurrency(Number(meta.valor_alvo))}
+                  </span>
+                </div>
+              </div>
+            );
+          })}
         </>
       )}
     </DashboardCard>

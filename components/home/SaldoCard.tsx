@@ -1,10 +1,13 @@
+import { DashboardCard } from '../shared/DashboardCard';
+
 export const SaldoCard = () => {
   return (
-    <div className='lg:col-span-4'>
-      <div className='h-[350px] rounded-lg border bg-white p-6 shadow-sm'>
-        <h2 className='text-lg font-semibold'>Saldo do mês</h2>
-        {/* TODO: Adicionar conteúdo */}
-      </div>
-    </div>
+    <DashboardCard
+      title='Saldo do mês'
+      className='h-full'
+      subtitle='Seus gastos e ganhos até agora'
+    >
+      <div>{/* Área de conversa */}</div>
+    </DashboardCard>
   );
 };

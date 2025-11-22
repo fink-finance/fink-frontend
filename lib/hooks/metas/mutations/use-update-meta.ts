@@ -41,30 +41,10 @@ export const useUpdateMeta = () => {
         }
       );
 
-      // Atualizar na lista de metas da pessoa
-      if (updatedMeta.fk_pessoa_id_pessoa) {
-        queryClient.setQueryData(
-          metasKeys.byPessoa(updatedMeta.fk_pessoa_id_pessoa),
-          (oldData: Meta[] | undefined) => {
-            if (!oldData) return [updatedMeta];
-
-            return oldData.map((meta) =>
-              meta.id_meta === id ? updatedMeta : meta
-            );
-          }
-        );
-      }
-
-      // Invalidar queries relacionadas para garantir sincronização
+      // ✅ Invalidar queries relacionadas para garantir sincronização
       queryClient.invalidateQueries({
         queryKey: metasKeys.lists(),
       });
-
-      if (updatedMeta.fk_pessoa_id_pessoa) {
-        queryClient.invalidateQueries({
-          queryKey: metasKeys.byPessoa(updatedMeta.fk_pessoa_id_pessoa),
-        });
-      }
     },
     onError: (error) => {
       console.error('Erro ao atualizar meta:', error);

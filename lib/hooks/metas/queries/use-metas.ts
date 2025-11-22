@@ -15,19 +15,15 @@ export const metasKeys = {
   list: (filters?: MetasFilters) => [...metasKeys.lists(), filters] as const,
   details: () => [...metasKeys.all, 'detail'] as const,
   detail: (id: number) => [...metasKeys.details(), id] as const,
-  byPessoa: (id_pessoa: number) =>
-    [...metasKeys.all, 'by-pessoa', id_pessoa] as const,
 };
 
-// Hook para listar todas as metas
+// ✅ Hook para listar metas do usuário autenticado
 export const useMetas = (filters?: MetasFilters) => {
   return useQuery({
     queryKey: metasKeys.list(filters),
     queryFn: async (): Promise<Meta[]> => {
-      // TODO: Implementar quando houver paginação no backend
-      // const url = buildUrl(API_ENDPOINTS.METAS.LIST, filters);
+      // ✅ Backend identifica usuário pelo token
       const url = API_ENDPOINTS.METAS.LIST;
-
       return api.get<Meta[]>(url);
     },
     // Configurações opcionais

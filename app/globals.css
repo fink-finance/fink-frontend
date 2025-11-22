@@ -46,6 +46,8 @@
     /* Radius */
     --radius: 0.5rem;
 
+    --empty-card-bg: 228 100% 97%; /* Fundo dos cards vazios */
+
     /* Charts - Usando as cores da paleta */
     --chart-1: 220 100% 50%; /* Azul Fink */
     --chart-2: 168 62% 64%; /* Verde Fink */
