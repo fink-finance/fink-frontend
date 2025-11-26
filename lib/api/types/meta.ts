@@ -4,12 +4,27 @@
 
 import type { BaseFilters } from './base';
 
+// ✅ Categorias disponíveis para metas
+export enum MetaCategoria {
+  EMERGENCIA = 'Emergência',
+  INVESTIMENTO = 'Investimento',
+  VIAGEM = 'Viagem',
+  EDUCACAO = 'Educação',
+  DIVIDAS = 'Dívidas',
+  MORADIA = 'Moradia',
+  VEICULO = 'Veículo',
+  INTERCAMBIO = 'Intercâmbio',
+  SEGURANCA = 'Segurança',
+  SAUDE = 'Saúde',
+  OUTROS = 'Outros',
+}
+
 // ✅ Resposta completa da API (GET)
 export interface Meta {
   id_meta: number;
   fk_pessoa_id_pessoa: number;
   titulo: string;
-  descricao: string;
+  categoria: string;
   valor_alvo: number;
   valor_atual: number;
   criada_em: string; // "YYYY-MM-DD" format
@@ -20,7 +35,7 @@ export interface Meta {
 // ✅ Tipo para criação de meta (POST) - apenas dados necessários
 export interface CreateMetaData {
   titulo: string;
-  descricao: string;
+  categoria?: string; // ✅ Opcional (backend usa "Outros" como padrão)
   valor_alvo: number;
   termina_em: string; // "YYYY-MM-DD" format
 }
@@ -28,7 +43,7 @@ export interface CreateMetaData {
 // ✅ Tipo para atualização de meta (PUT/PATCH) - campos opcionais
 export interface UpdateMetaData {
   titulo?: string;
-  descricao?: string;
+  categoria?: string;
   valor_alvo?: number;
   termina_em?: string;
   valor_atual?: number;

@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { useCreateMeta } from '@/lib/hooks/metas/mutations/use-create-meta';
 import type { CreateMetaData } from '@/lib/api/types/meta';
+import { MetaCategoria } from '@/lib/api/types/meta';
 import { ModalDialog } from '../shared/ModalDialog';
 import {
   Form,
@@ -16,13 +17,48 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
-// ✅ Schema de validação Zod - apenas campos necessários
+// ✅ Categorias disponíveis
+const CATEGORIAS = Object.values(MetaCategoria);
+
+// ✅ Schema de validação Zod com validações avançadas
 const formSchema = z.object({
-  titulo: z.string().min(1, 'O título é obrigatório'),
-  descricao: z.string().min(1, 'A descrição é obrigatória'),
-  valor_alvo: z.number().positive('O valor deve ser positivo'),
-  termina_em: z.string().min(1, 'A data final é obrigatória'),
+  titulo: z
+    .string()
+    .min(1, 'O título é obrigatório')
+    .max(50, 'O título deve ter no máximo 50 caracteres'),
+
+  categoria: z.string().optional(),
+
+  valor_alvo: z
+    .number({
+      message: 'Digite um valor válido',
+    })
+    .positive('O valor deve ser positivo')
+    .min(0.01, 'O valor mínimo é R$ 0,01')
+    .max(999999999.99, 'O valor é muito alto'),
+
+  termina_em: z
+    .string()
+    .min(1, 'A data final é obrigatória')
+    .refine(
+      (date) => {
+        const selectedDate = new Date(date);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // Remove horas para comparar só a data
+        return selectedDate >= today;
+      },
+      {
+        message: 'A data final deve ser hoje ou uma data futura',
+      }
+    ),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -39,23 +75,33 @@ export const AddMetaModal = ({ open, onOpenChange }: AddMetaModalProps) => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       titulo: '',
-      descricao: '',
+      categoria: undefined, // ✅ Opcional - backend usa "Outros" como padrão
       valor_alvo: 0,
       termina_em: '',
     },
   });
 
   const onSubmit = (data: FormValues) => {
-    // ✅ Dados já estão no formato correto (CreateMetaData)
-    const metaData: CreateMetaData = data;
+    // ✅ Só envia categoria se o usuário selecionar (backend usa "Outros" como padrão)
+    const metaData: CreateMetaData = {
+      titulo: data.titulo,
+      valor_alvo: data.valor_alvo,
+      termina_em: data.termina_em,
+      ...(data.categoria && { categoria: data.categoria }),
+    };
+
+    console.log('📤 Dados enviados ao backend:', metaData);
 
     createMeta(metaData, {
       onSuccess: () => {
         form.reset();
         onOpenChange(false);
       },
-      onError: (error) => {
-        console.error('Erro ao criar meta:', error);
+      onError: (error: any) => {
+        console.error('❌ Erro ao criar meta:', error);
+        console.error('❌ Error status:', error.status);
+        console.error('❌ Error details:', error.details);
+        console.error('❌ Error message:', error.message);
       },
     });
   };
@@ -65,98 +111,135 @@ export const AddMetaModal = ({ open, onOpenChange }: AddMetaModalProps) => {
       open={open}
       onOpenChange={onOpenChange}
       title='Criar nova meta'
-      className='w-[95vw] max-w-[800px] min-h-[600px] max-h-[90vh] overflow-y-auto'
+      className='w-[95vw] h-full max-w-[800px] max-h-[80vh] overflow-y-auto'
     >
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
-          {/* Título */}
-          <FormField
-            control={form.control}
-            name='titulo'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>
-                  Título <span className='text-red-500'>*</span>
-                </FormLabel>
-                <FormControl>
-                  <Input placeholder='Digite o título da meta' {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className='flex flex-col h-full'
+        >
+          <div className='space-y-6 pb-6 flex-1'>
+            {/* Grid com 2 colunas - TODOS os campos */}
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-x-2 gap-y-6'>
+              {/* Título */}
+              <FormField
+                control={form.control}
+                name='titulo'
+                render={({ field }) => (
+                  <FormItem className='space-y-0.5'>
+                    <FormLabel className='text-base'>Título *</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder='Ex: Comprar um imóvel'
+                        {...field}
+                        className='h-12 text-base'
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-          {/* Descrição */}
-          <FormField
-            control={form.control}
-            name='descricao'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>
-                  Descrição <span className='text-red-500'>*</span>
-                </FormLabel>
-                <FormControl>
-                  <Input placeholder='Descreva sua meta' {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+              {/* Valor alvo */}
+              <FormField
+                control={form.control}
+                name='valor_alvo'
+                render={({ field }) => (
+                  <FormItem className='space-y-0.5'>
+                    <FormLabel className='text-base'>Valor da meta *</FormLabel>
+                    <FormControl>
+                      <div className='relative'>
+                        <span className='absolute left-3 top-1/2 -translate-y-1/2 text-primary text-base font-semibold'>
+                          R$
+                        </span>
+                        <Input
+                          type='number'
+                          step='0.01'
+                          min='0'
+                          {...field}
+                          onChange={(e) =>
+                            field.onChange(parseFloat(e.target.value) || 0)
+                          }
+                          className='h-12 text-base pl-10'
+                        />
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-          {/* Valor alvo */}
-          <FormField
-            control={form.control}
-            name='valor_alvo'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>
-                  Valor da meta <span className='text-red-500'>*</span>
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    type='number'
-                    step='0.01'
-                    min='0'
-                    placeholder='0.00'
-                    {...field}
-                    onChange={(e) =>
-                      field.onChange(parseFloat(e.target.value) || 0)
-                    }
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+              {/* Categoria */}
+              <FormField
+                control={form.control}
+                name='categoria'
+                render={({ field }) => (
+                  <FormItem className='space-y-0.5'>
+                    <FormLabel className='text-base'>
+                      Categoria (opcional)
+                    </FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger className='h-12 text-base'>
+                          <SelectValue placeholder='Selecione a categoria' />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {CATEGORIAS.map((categoria) => (
+                          <SelectItem key={categoria} value={categoria}>
+                            {categoria}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-          {/* Data final */}
-          <FormField
-            control={form.control}
-            name='termina_em'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>
-                  Data final <span className='text-red-500'>*</span>
-                </FormLabel>
-                <FormControl>
-                  <Input type='date' {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+              {/* Data final */}
+              <FormField
+                control={form.control}
+                name='termina_em'
+                render={({ field }) => (
+                  <FormItem className='space-y-0.5'>
+                    <FormLabel className='text-base'>Data final *</FormLabel>
+                    <FormControl>
+                      <Input
+                        type='date'
+                        {...field}
+                        className='h-12 text-base'
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+          </div>
 
-          {/* Botões */}
-          <div className='flex justify-end gap-3 pt-4'>
+          {/* Botões - fixos na parte inferior */}
+          <div className='flex justify-end gap-3 pt-4 mt-auto'>
             <Button
               type='button'
-              variant='outline'
               onClick={() => onOpenChange(false)}
               disabled={isPending}
+              size='lg'
+              radius='xl'
+              className='bg-zinc-200 hover:bg-zinc-300 text-foreground font-medium px-8 h-12'
             >
               Cancelar
             </Button>
-            <Button type='submit' disabled={isPending}>
+            <Button
+              type='submit'
+              disabled={isPending}
+              size='lg'
+              radius='xl'
+              className='font-medium px-8 h-12'
+            >
               {isPending ? 'Criando...' : 'Criar nova meta'}
             </Button>
           </div>

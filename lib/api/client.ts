@@ -58,10 +58,19 @@ addRequestInterceptor(authInterceptor);
 // Função para tratar erros de resposta
 const handleErrorResponse = async (response: Response): Promise<never> => {
   let errorMessage = `HTTP Error: ${response.status}`;
+  let errorDetails = null;
 
   try {
     const errorData = await response.json();
-    errorMessage = errorData.message || errorMessage;
+    errorDetails = errorData;
+    errorMessage = errorData.message || errorData.detail || errorMessage;
+
+    // ✅ Log detalhado do erro para debug
+    console.error('🔴 API Error Details:', {
+      status: response.status,
+      statusText: response.statusText,
+      data: errorData,
+    });
   } catch {
     errorMessage = response.statusText || errorMessage;
   }
@@ -76,7 +85,10 @@ const handleErrorResponse = async (response: Response): Promise<never> => {
     throw new Error('Token expirado. Faça login novamente.');
   }
 
-  throw new Error(errorMessage);
+  const error = new Error(errorMessage) as any;
+  error.status = response.status;
+  error.details = errorDetails;
+  throw error;
 };
 
 // Função base para requisições HTTP

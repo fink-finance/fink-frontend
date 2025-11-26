@@ -1,7 +1,7 @@
 'use client';
 
 import { useMetas } from '@/lib/hooks/metas';
-import { MetasCard } from '../metas/MetaCard';
+import { MetaCard } from '../metas/MetaCard';
 import { EmptyMetasCard } from './EmptyMetasCard';
 import { SpinLoader } from '../shared/SpinLoader';
 
@@ -28,8 +28,8 @@ export const MetasGrid = () => {
   return (
     <div className='container pb-6'>
       <div className='grid grid-cols-1 gap-6 [grid-auto-rows:minmax(200px,300px)] lg:grid-cols-2'>
-        {metas && metas.length === 0 ? (
-          metas.map((meta) => <MetasCard key={meta.id_meta} />)
+        {metas && metas.length > 0 ? (
+          metas.map((meta) => <MetaCard key={meta.id_meta} meta={meta} />)
         ) : (
           <EmptyMetasCard />
         )}

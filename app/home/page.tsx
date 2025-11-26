@@ -1,4 +1,4 @@
-import { FilterBar } from '@/components/home/FilterBar';
+import { HomeFilterBar } from '@/components/home/HomeFilterBar';
 import { CardsGrid } from '@/components/home/GridCards';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 
@@ -7,7 +7,7 @@ export default function HomePage() {
     <ProtectedRoute>
       <div className='min-h-screen bg-slate-50 pt-4'>
         {/* Saudação + Filtros */}
-        <FilterBar />
+        <HomeFilterBar />
 
         {/* Grid de Cards */}
         <CardsGrid />

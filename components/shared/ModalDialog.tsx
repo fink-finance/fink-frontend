@@ -22,11 +22,11 @@ export const ModalDialog = ({
 }: ModalDialogProps) => {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className={className}>
-        <DialogHeader className='border-b py-4 mb-4 -mx-4 px-4'>
+      <DialogContent className={`flex flex-col ${className}`}>
+        <DialogHeader className='border-b py-4 mb-4 -mx-4 px-4 flex-shrink-0'>
           <DialogTitle className='font-bold text-2xl'>{title}</DialogTitle>
         </DialogHeader>
-        {children}
+        <div className='flex-1 flex flex-col overflow-y-auto'>{children}</div>
       </DialogContent>
     </Dialog>
   );

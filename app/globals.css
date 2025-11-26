@@ -74,4 +74,11 @@
       Arial,
       sans-serif;
   }
+
+  /* Placeholder cinza claro */
+  input::placeholder,
+  textarea::placeholder {
+    @apply text-muted-foreground/40;
+    color: #d1d1d1;
+  }
 }
