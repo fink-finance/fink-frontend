@@ -5,7 +5,25 @@ import { Calendar, Plane } from 'lucide-react';
 
 type MetaCardProps = {
   meta: Meta;
+  interactive?: boolean;
+  onClick?: () => void;
+  className?: string;
 };
+
+// // Mapeamento de categorias para ícones
+// const CATEGORIA_ICONS: Record<string, string> = {
+//   Emergência: '/images/metas/emergencia.png',
+//   Investimento: '/images/metas/investimento.png',
+//   Viagem: '/images/metas/viagem.png',
+//   Educação: '/images/metas/educacao.png',
+//   Dívidas: '/images/metas/dividas.png',
+//   Moradia: '/images/metas/moradia.png',
+//   Veículo: '/images/metas/veiculo.png',
+//   Intercâmbio: '/images/metas/intercambio.png',
+//   Segurança: '/images/metas/seguranca.png',
+//   Saúde: '/images/metas/saude.png',
+//   Outros: '/images/metas/outros.png',
+// };
 
 // Cores de status
 const STATUS_COLORS: Record<string, string[]> = {
@@ -22,7 +40,12 @@ const STATUS_LABELS: Record<string, string> = {
   atrasada: 'Atrasada',
 };
 
-export const MetaCard = ({ meta }: MetaCardProps) => {
+export const MetaCard = ({
+  meta,
+  interactive = false,
+  onClick,
+  className = '',
+}: MetaCardProps) => {
   const formattedActualValue = toBRCurrency(Number(meta.valor_atual), false);
   const formattedTargetValue = toBRCurrency(Number(meta.valor_alvo));
 
@@ -32,11 +55,15 @@ export const MetaCard = ({ meta }: MetaCardProps) => {
   ).toFixed(0);
 
   // Formatar data
-  const formattedDate = new Date(meta.criada_em).toLocaleDateString('pt-BR');
+  const formattedDate = new Date(meta.termina_em).toLocaleDateString('pt-BR');
+
+  // Classes condicionais baseadas na prop interactive
+  const cardClasses =
+    `${interactive ? 'group hover:shadow-lg hover:scale-[1.02] transition-all duration-300 cursor-pointer' : ''} ${className}`.trim();
 
   return (
     <>
-      <Card className='group hover:shadow-lg hover:scale-[1.02] transition-all duration-300 cursor-pointer'>
+      <Card className={cardClasses} onClick={interactive ? onClick : undefined}>
         {/* Top div */}
         <div className='p-6 md:pt-10 space-y-4'>
           {/* Status badge */}

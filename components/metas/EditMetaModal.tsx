@@ -1,0 +1,314 @@
+'use client';
+
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { useEffect } from 'react';
+import * as z from 'zod';
+import { useUpdateMeta } from '@/lib/hooks/metas/mutations/use-update-meta';
+import type { UpdateMetaData } from '@/lib/api/types/meta';
+import { MetaCategoria } from '@/lib/api/types/meta';
+import { Meta } from '@/lib/api/types';
+import { ModalDialog } from '../shared/ModalDialog';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+
+// Categorias disponíveis
+const CATEGORIAS = Object.values(MetaCategoria);
+
+// Schema de validação Zod
+const formSchema = z.object({
+  status: z.enum(['em_andamento', 'cancelada']),
+
+  titulo: z
+    .string()
+    .min(1, 'O título é obrigatório')
+    .max(50, 'O título deve ter no máximo 50 caracteres'),
+
+  categoria: z.string().optional(),
+
+  valor_alvo: z
+    .number({
+      message: 'Digite um valor válido',
+    })
+    .positive('O valor deve ser positivo')
+    .min(0.01, 'O valor mínimo é R$ 0,01')
+    .max(999999999.99, 'O valor é muito alto'),
+
+  termina_em: z
+    .string()
+    .min(1, 'A data final é obrigatória')
+    .refine(
+      (date) => {
+        const selectedDate = new Date(date);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        return selectedDate >= today;
+      },
+      {
+        message: 'A data final deve ser hoje ou uma data futura',
+      }
+    ),
+});
+
+type FormValues = z.infer<typeof formSchema>;
+
+type EditMetaModalProps = {
+  meta: Meta | null;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+};
+
+export const EditMetaModal = ({
+  meta,
+  open,
+  onOpenChange,
+}: EditMetaModalProps) => {
+  const { mutate: updateMeta, isPending } = useUpdateMeta();
+
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      status: 'em_andamento',
+      titulo: '',
+      categoria: undefined,
+      valor_alvo: 0,
+      termina_em: '',
+    },
+  });
+
+  // Preencher formulário quando meta mudar
+  useEffect(() => {
+    if (meta) {
+      form.reset({
+        status: meta.status === 'cancelada' ? 'cancelada' : 'em_andamento',
+        titulo: meta.titulo,
+        categoria: meta.categoria || undefined,
+        valor_alvo: Number(meta.valor_alvo),
+        termina_em: meta.termina_em
+          ? new Date(meta.termina_em).toISOString().split('T')[0]
+          : '',
+      });
+    }
+  }, [meta, form]);
+
+  const onSubmit = (data: FormValues) => {
+    if (!meta) return;
+
+    const metaData: UpdateMetaData = {
+      status: data.status,
+      titulo: data.titulo,
+      valor_alvo: data.valor_alvo,
+      termina_em: data.termina_em,
+      ...(data.categoria && { categoria: data.categoria }),
+    };
+
+    console.log('📤 Dados enviados ao backend:', metaData);
+
+    updateMeta(
+      { id: meta.id_meta, data: metaData },
+      {
+        onSuccess: () => {
+          form.reset();
+          onOpenChange(false);
+        },
+        onError: (error: any) => {
+          console.error('❌ Erro ao atualizar meta:', error);
+          console.error('❌ Error status:', error.status);
+          console.error('❌ Error details:', error.details);
+          console.error('❌ Error message:', error.message);
+        },
+      }
+    );
+  };
+
+  return (
+    <ModalDialog
+      open={open}
+      onOpenChange={onOpenChange}
+      title='Edição de meta'
+      className='w-[95vw] h-full max-w-[800px] max-h-[80vh] overflow-y-auto'
+    >
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className='flex flex-col h-full'
+        >
+          <div className='space-y-6 pb-6 flex-1'>
+            {/* Toggle Ativa/Inativa */}
+            <FormField
+              control={form.control}
+              name='status'
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <div className='flex rounded-full'>
+                      <Button
+                        type='button'
+                        onClick={() => field.onChange('em_andamento')}
+                        className={`px-6 py-2 rounded-full font-medium transition-colors ${
+                          field.value === 'em_andamento'
+                            ? 'bg-accent text-white'
+                            : 'bg-gray-200 text-gray-600 hover:bg-gray-300'
+                        }`}
+                      >
+                        Ativa
+                      </Button>
+                      <Button
+                        type='button'
+                        onClick={() => field.onChange('cancelada')}
+                        className={`px-6 py-2 rounded-full font-medium transition-colors ${
+                          field.value === 'cancelada'
+                            ? 'bg-muted text-white'
+                            : 'bg-gray-200 text-gray-600 hover:bg-gray-300'
+                        }`}
+                      >
+                        Inativa
+                      </Button>
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Grid com 2 colunas */}
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-x-2 gap-y-6'>
+              {/* Título */}
+              <FormField
+                control={form.control}
+                name='titulo'
+                render={({ field }) => (
+                  <FormItem className='space-y-0.5'>
+                    <FormLabel className='text-base'>Título *</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder='Ex: Comprar um imóvel'
+                        {...field}
+                        className='h-12 text-base'
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* Valor alvo */}
+              <FormField
+                control={form.control}
+                name='valor_alvo'
+                render={({ field }) => (
+                  <FormItem className='space-y-0.5'>
+                    <FormLabel className='text-base'>Valor da meta *</FormLabel>
+                    <FormControl>
+                      <div className='relative'>
+                        <span className='absolute left-3 top-1/2 -translate-y-1/2 text-primary text-base font-semibold'>
+                          R$
+                        </span>
+                        <Input
+                          type='number'
+                          step='0.01'
+                          min='0'
+                          {...field}
+                          onChange={(e) =>
+                            field.onChange(parseFloat(e.target.value) || 0)
+                          }
+                          className='h-12 text-lg pl-10'
+                        />
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* Categoria */}
+              <FormField
+                control={form.control}
+                name='categoria'
+                render={({ field }) => (
+                  <FormItem className='space-y-0.5'>
+                    <FormLabel className='text-base'>
+                      Categoria (opcional)
+                    </FormLabel>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <FormControl>
+                        <SelectTrigger className='h-12 text-base'>
+                          <SelectValue placeholder='Selecione a categoria' />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {CATEGORIAS.map((categoria) => (
+                          <SelectItem key={categoria} value={categoria}>
+                            {categoria}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* Data final */}
+              <FormField
+                control={form.control}
+                name='termina_em'
+                render={({ field }) => (
+                  <FormItem className='space-y-0.5'>
+                    <FormLabel className='text-base'>Data final *</FormLabel>
+                    <FormControl>
+                      <Input
+                        type='date'
+                        {...field}
+                        className='h-12 text-base'
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+          </div>
+
+          {/* Botões - fixos na parte inferior */}
+          <div className='flex justify-end gap-3 pt-4 mt-auto'>
+            <Button
+              type='button'
+              onClick={() => onOpenChange(false)}
+              disabled={isPending}
+              size='lg'
+              radius='xl'
+              className='bg-zinc-200 hover:bg-zinc-300 text-foreground font-medium px-8 h-12'
+            >
+              Cancelar
+            </Button>
+            <Button
+              type='submit'
+              disabled={isPending}
+              size='lg'
+              radius='xl'
+              className='font-medium px-8 h-12'
+            >
+              {isPending ? 'Salvando...' : 'Salvar alterações'}
+            </Button>
+          </div>
+        </form>
+      </Form>
+    </ModalDialog>
+  );
+};
