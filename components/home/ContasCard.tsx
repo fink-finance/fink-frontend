@@ -6,8 +6,7 @@ export const ContasCard = () => {
     <DashboardCard
       title='Minhas contas'
       className='h-full'
-      subtitle='Todas as suas contas conciliadas ao OpenFinance'
-      // Open Finance deve ser em azul
+      subtitle='Todas as suas contas em um só lugar'
     >
       <PluggyButton />
 

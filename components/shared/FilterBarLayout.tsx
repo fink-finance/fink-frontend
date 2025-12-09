@@ -16,8 +16,8 @@ export function FilterBarLayout({
   const displaySubtitle = subtitle ? `${subtitle}` : `${formattedDate}`;
 
   return (
-    <div className='container py-8 w-full'>
-      <div className='flex items-center justify-between'>
+    <div className='hidden md:block container py-8 w-full'>
+      <div className='flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4'>
         {/* Saudação */}
         <div>
           <p className='text-md text-zinc-600 pb-2'>{displaySubtitle}</p>

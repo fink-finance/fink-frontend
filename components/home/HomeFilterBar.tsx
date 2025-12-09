@@ -1,5 +1,4 @@
 import { Button } from '@/components/ui/button';
-import { FolderInput } from 'lucide-react';
 import { getFormattedDate } from '@/lib/utils/get-formatted-date';
 import { getGreetingByHour } from '@/lib/utils/get-greeting-by-hour';
 import { FilterBarLayout } from '../shared/FilterBarLayout';
@@ -25,10 +24,7 @@ export function HomeFilterBar() {
           </Button>
         </div>
         <div className='flex items-center'>
-          <Button size='lg'>
-            <FolderInput className='h-8 w-8' />
-            Exportar dados
-          </Button>
+          <Button size='lg'>Exportar dados</Button>
         </div>
       </>
     </FilterBarLayout>

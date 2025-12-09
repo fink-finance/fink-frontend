@@ -15,7 +15,7 @@ export const pessoasKeys = {
   list: (filters?: PessoasFilters) =>
     [...pessoasKeys.lists(), filters] as const,
   details: () => [...pessoasKeys.all, 'detail'] as const,
-  detail: (id: number) => [...pessoasKeys.details(), id] as const,
+  detail: (id: string) => [...pessoasKeys.details(), id] as const,
   byEmail: (email: string) => [...pessoasKeys.all, 'by-email', email] as const,
 };
 

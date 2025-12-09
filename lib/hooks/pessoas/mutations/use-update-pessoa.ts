@@ -17,10 +17,10 @@ export const useUpdatePessoa = () => {
       id,
       data,
     }: {
-      id: number;
+      id: string;
       data: UpdatePessoaData;
     }): Promise<Pessoa> => {
-      const url = API_ENDPOINTS.PESSOAS.UPDATE(String(id));
+      const url = API_ENDPOINTS.PESSOAS.UPDATE(id);
       return api.patch<Pessoa>(url, data);
     },
     onSuccess: (updatedPessoa, variables) => {

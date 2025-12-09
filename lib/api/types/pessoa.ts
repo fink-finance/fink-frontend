@@ -5,7 +5,7 @@
 import type { BaseFilters } from './base';
 
 export interface Pessoa {
-  id_pessoa?: number;
+  id_pessoa?: string;
   email: string;
   nome: string;
   data_nascimento: string; // "YYYY-MM-DD" format

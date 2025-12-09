@@ -6,8 +6,14 @@ import { useEffect } from 'react';
 import * as z from 'zod';
 import { useUpdateMeta } from '@/lib/hooks/metas/mutations/use-update-meta';
 import type { UpdateMetaData } from '@/lib/api/types/meta';
-import { MetaCategoria } from '@/lib/api/types/meta';
+import { MetaCategoria, MetaStatus } from '@/lib/api/types/meta';
 import { Meta } from '@/lib/api/types';
+import { cn } from '@/lib/utils';
+import {
+  CATEGORIA_ICONS,
+  CATEGORY_BG_COLORS,
+  CATEGORY_TEXT_COLORS,
+} from '../metas/MetaCard';
 import { ModalDialog } from '../shared/ModalDialog';
 import {
   Form,
@@ -32,7 +38,7 @@ const CATEGORIAS = Object.values(MetaCategoria);
 
 // Schema de validação Zod
 const formSchema = z.object({
-  status: z.enum(['em_andamento', 'cancelada']),
+  status: z.enum([MetaStatus.EM_ANDAMENTO, MetaStatus.CANCELADA]),
 
   titulo: z
     .string()
@@ -83,7 +89,7 @@ export const EditMetaModal = ({
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      status: 'em_andamento',
+      status: MetaStatus.EM_ANDAMENTO,
       titulo: '',
       categoria: undefined,
       valor_alvo: 0,
@@ -95,7 +101,10 @@ export const EditMetaModal = ({
   useEffect(() => {
     if (meta) {
       form.reset({
-        status: meta.status === 'cancelada' ? 'cancelada' : 'em_andamento',
+        status:
+          meta.status === MetaStatus.CANCELADA
+            ? MetaStatus.CANCELADA
+            : MetaStatus.EM_ANDAMENTO,
         titulo: meta.titulo,
         categoria: meta.categoria || undefined,
         valor_alvo: Number(meta.valor_alvo),
@@ -159,9 +168,9 @@ export const EditMetaModal = ({
                     <div className='flex rounded-full'>
                       <Button
                         type='button'
-                        onClick={() => field.onChange('em_andamento')}
+                        onClick={() => field.onChange(MetaStatus.EM_ANDAMENTO)}
                         className={`px-6 py-2 rounded-full font-medium transition-colors ${
-                          field.value === 'em_andamento'
+                          field.value === MetaStatus.EM_ANDAMENTO
                             ? 'bg-accent text-white'
                             : 'bg-gray-200 text-gray-600 hover:bg-gray-300'
                         }`}
@@ -170,9 +179,9 @@ export const EditMetaModal = ({
                       </Button>
                       <Button
                         type='button'
-                        onClick={() => field.onChange('cancelada')}
+                        onClick={() => field.onChange(MetaStatus.CANCELADA)}
                         className={`px-6 py-2 rounded-full font-medium transition-colors ${
-                          field.value === 'cancelada'
+                          field.value === MetaStatus.CANCELADA
                             ? 'bg-muted text-white'
                             : 'bg-gray-200 text-gray-600 hover:bg-gray-300'
                         }`}
@@ -240,28 +249,73 @@ export const EditMetaModal = ({
               <FormField
                 control={form.control}
                 name='categoria'
-                render={({ field }) => (
-                  <FormItem className='space-y-0.5'>
-                    <FormLabel className='text-base'>
-                      Categoria (opcional)
-                    </FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value}>
-                      <FormControl>
-                        <SelectTrigger className='h-12 text-base'>
-                          <SelectValue placeholder='Selecione a categoria' />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {CATEGORIAS.map((categoria) => (
-                          <SelectItem key={categoria} value={categoria}>
-                            {categoria}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                render={({ field }) => {
+                  const IconComponent = field.value
+                    ? CATEGORIA_ICONS[field.value] ||
+                      CATEGORIA_ICONS[MetaCategoria.OUTROS]
+                    : null;
+
+                  return (
+                    <FormItem className='space-y-0.5'>
+                      <FormLabel className='text-base'>
+                        Categoria (opcional)
+                      </FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger className='h-12 text-base'>
+                            {field.value && IconComponent ? (
+                              <div className='flex items-center gap-2 w-full'>
+                                <div
+                                  className={cn(
+                                    'flex items-center justify-center w-6 h-6 rounded-full',
+                                    CATEGORY_BG_COLORS[
+                                      field.value as MetaCategoria
+                                    ] ||
+                                      CATEGORY_BG_COLORS[MetaCategoria.OUTROS]
+                                  )}
+                                >
+                                  <IconComponent
+                                    className={cn(
+                                      'w-4 h-4',
+                                      CATEGORY_TEXT_COLORS[
+                                        field.value as MetaCategoria
+                                      ] ||
+                                        CATEGORY_TEXT_COLORS[
+                                          MetaCategoria.OUTROS
+                                        ]
+                                    )}
+                                  />
+                                </div>
+                                <SelectValue>{field.value}</SelectValue>
+                              </div>
+                            ) : (
+                              <SelectValue placeholder='Selecione a categoria' />
+                            )}
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {CATEGORIAS.map((categoria) => {
+                            const ItemIcon =
+                              CATEGORIA_ICONS[categoria] ||
+                              CATEGORIA_ICONS[MetaCategoria.OUTROS];
+                            return (
+                              <SelectItem key={categoria} value={categoria}>
+                                <div className='flex items-center gap-2'>
+                                  <ItemIcon className='w-4 h-4' />
+                                  <span>{categoria}</span>
+                                </div>
+                              </SelectItem>
+                            );
+                          })}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  );
+                }}
               />
 
               {/* Data final */}
