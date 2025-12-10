@@ -1,15 +1,20 @@
+import { useCurrentPessoa } from '@/lib/hooks/pessoas';
 import Link from 'next/link';
 
 export const UserProfileIcon = () => {
-  // TODO: quando o hook de pessoa estiver pronto, usar aqui
-  // const { data: pessoa, isLoading } = useCurrentPessoa();
+  const { data: pessoa } = useCurrentPessoa();
 
   return (
     <Link
       href="/profile"
       className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity"
     >
-      <div className="h-12 w-12 rounded-full bg-zinc-200" />
+      <div
+        className='h-12 w-12 rounded-full bg-primary flex items-center 
+      justify-center text-xl font-semibold text-primary-foreground overflow-hidden'
+      >
+        <span>{pessoa?.nome.charAt(0)}</span>
+      </div>
     </Link>
   );
 };
