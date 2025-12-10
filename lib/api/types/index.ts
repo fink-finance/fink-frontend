@@ -10,9 +10,9 @@ export * from './base';
 export * from './pessoa';
 export * from './meta';
 export * from './sessao';
+export * from './alerta';
 
 // TODO: Adicionar conforme implementamos outras entidades
-// export * from './alerta';
 // export * from './plano';
 // export * from './assinatura';
 // export * from './tipo-pagamento';
