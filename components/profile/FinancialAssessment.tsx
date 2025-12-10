@@ -46,53 +46,39 @@ export function FinancialAssessment({
         Suas características e relação com o dinheiro ao longo do tempo
       </p>
 
-      {/* Date picker + Tab buttons */}
-      <div className='flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1 mb-8'>
-        {/* Date input */}
-        <div className='relative'>
-          <input
-            type='text'
-            value={date}
-            readOnly
-            className='w-full sm:w-auto h-11 px-4 pl-10 border border-[#E7EBEE] rounded-lg text-sm bg-white'
-            style={{
-              fontFamily: 'DM Sans',
-              fontWeight: 400,
-              color: '#808088',
-            }}
-          />
-          <svg
-            className='absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4'
-            style={{ color: '#808088' }}
-            fill='none'
-            stroke='currentColor'
-            viewBox='0 0 24 24'
-            strokeWidth='2'
-          >
-            <rect x='3' y='4' width='18' height='18' rx='2' ry='2' />
-            <line x1='16' y1='2' x2='16' y2='6' />
-            <line x1='8' y1='2' x2='8' y2='6' />
-            <line x1='3' y1='10' x2='21' y2='10' />
-          </svg>
-        </div>
-
-        {/* Tab buttons */}
-        <div className='flex flex-wrap gap-2'>
-          <TabButton active={activeTab === 'last'}>Última avaliação</TabButton>
-          <TabButton active={activeTab === 'penultimate'}>
-            Penúltima avaliação
-          </TabButton>
-          <TabButton active={activeTab === 'first'}>
-            Primeira avaliação
-          </TabButton>
-        </div>
-      </div>
-
-      {/* Main content - Dashboard + Steps | Questions */}
-      <div className='flex gap-6'>
-        {/* Left: Dashboard + Steps */}
+      {/* Layout principal: esquerda (data + gráfico + etapas) | direita (abas + perguntas) */}
+      <div className='flex gap-40 items-start'>
+        {/* COLUNA ESQUERDA */}
         <div className='flex flex-col gap-6'>
-          {/* Dashboard Image - 310.41px × 222px */}
+          {/* Date input */}
+          <div className='relative w-[220px]'>
+            <input
+              type='text'
+              value={date}
+              readOnly
+              className='w-full h-11 px-4 pl-10 border border-[#E7EBEE] rounded-lg text-sm bg-white'
+              style={{
+                fontFamily: 'DM Sans',
+                fontWeight: 400,
+                color: '#808088',
+              }}
+            />
+            <svg
+              className='absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4'
+              style={{ color: '#808088' }}
+              fill='none'
+              stroke='currentColor'
+              viewBox='0 0 24 24'
+              strokeWidth='2'
+            >
+              <rect x='3' y='4' width='18' height='18' rx='2' ry='2' />
+              <line x1='16' y1='2' x2='16' y2='6' />
+              <line x1='8' y1='2' x2='8' y2='6' />
+              <line x1='3' y1='10' x2='21' y2='10' />
+            </svg>
+          </div>
+
+          {/* Radar */}
           <div className='w-[310.41px] h-[222px] flex-shrink-0'>
             <Image
               src='/images/profile/dashboard.png'
@@ -104,11 +90,9 @@ export function FinancialAssessment({
             />
           </div>
 
-          {/* Steps - 292px × 322px, Gap 8px */}
+          {/* Etapas */}
           <div className='w-[292px] h-[322px] flex-shrink-0 relative'>
-            {/* Vertical connecting line - Height 40px between steps */}
             <div className='absolute left-[11px] top-[34px] bottom-[34px] w-[1px] bg-[#E7EBEE]' />
-
             <div className='space-y-2 relative'>
               {steps.map((step, index) => (
                 <StepItem key={index} {...step} />
@@ -117,11 +101,27 @@ export function FinancialAssessment({
           </div>
         </div>
 
-        {/* Right: Questions */}
-        <div className='flex-1 space-y-4'>
-          {questions.map((question, index) => (
-            <QuestionCard key={index} {...question} />
-          ))}
+        {/* COLUNA DIREITA – abas + perguntas (alinhados entre si) */}
+        <div className='flex-1 flex flex-col gap-4'>
+          {/* Abas */}
+          <div className='flex flex-wrap gap-2'>
+            <TabButton active={activeTab === 'last'}>
+              Última avaliação
+            </TabButton>
+            <TabButton active={activeTab === 'penultimate'}>
+              Penúltima avaliação
+            </TabButton>
+            <TabButton active={activeTab === 'first'}>
+              Primeira avaliação
+            </TabButton>
+          </div>
+
+          {/* Perguntas – agora alinhadas exatamente com a aba “Última avaliação” */}
+          <div className='space-y-4'>
+            {questions.map((question, index) => (
+              <QuestionCard key={index} {...question} />
+            ))}
+          </div>
         </div>
       </div>
     </Card>
@@ -154,7 +154,7 @@ function TabButton({
   );
 }
 
-// Step Item Component - 292px × 68px, Gap 4px
+// Step Item Component
 function StepItem({ label, description, active = false }: AssessmentStep) {
   return (
     <div className='w-[292px] h-[68px] flex items-start gap-1 relative'>
