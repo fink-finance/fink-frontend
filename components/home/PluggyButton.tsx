@@ -39,7 +39,7 @@ export default function PluggyButton() {
         disabled={loading}
         className="mt-3 rounded-md border px-3 py-2 text-sm font-medium bg-white hover:bg-gray-50"
       >
-        {loading ? "Carregando..." : "Criar conexão"}
+        {loading ? "Carregando..." : "Conectar conta"}
       </button>
 
       {connectToken && open && (

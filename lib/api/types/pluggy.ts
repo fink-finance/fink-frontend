@@ -11,3 +11,18 @@ export type PluggyTransaction = {
   provider?: string;       // se vier
   [key: string]: any;
 };
+
+// lib/api/types/pluggy.ts
+
+export interface PluggyAccount {
+  id: string;
+  name?: string;
+  type?: string;
+  balance?: number;
+  currencyCode?: string;
+  institution?: {
+    name?: string;
+    [key: string]: any;
+  };
+  [key: string]: any;
+}
