@@ -19,21 +19,23 @@ import {
   BsHeart,
 } from 'react-icons/bs';
 import { getFormattedDate } from '@/lib/utils/get-formatted-date';
+import { useRouter } from 'next/navigation';
 
 export default function ProfilePage() {
   const { user, logout } = useAuth();
+  const router = useRouter();
 
   const userData = {
-    nome: user?.nome || 'Amanda Magalhães',
-    idade: 22,
-    cpf: '095.990.808-73',
-    email: 'amandamag@gmail.com',
-    telefone: '+55 (89) 99678-0099',
-    genero: 'Mulher Cis',
+    nome: user?.nome || ' Gabriel Bezerra de Andrade',
+    idade: 21,
+    cpf: '120.919.084-28',
+    email: 'gabrielbandrade@gmail.com',
+    telefone: '+55 (81) 99144-2226',
+    genero: 'Homem Cis',
     rendaMensal: 'R$ 1.000 – R$ 2.000',
-    localizacao: 'São Paulo, SP',
+    localizacao: 'Recife, PE',
     escolaridade: 'Ensino Superior Incompleto',
-    ocupacao: 'Estagiária',
+    ocupacao: 'Estagiário',
     estadoCivil: 'Solteiro (a)',
   };
 
@@ -78,21 +80,25 @@ export default function ProfilePage() {
       icon: <FiCreditCard className='text-[#808088]' size={20} />,
       title: 'Minhas contas',
       subtitle: 'Todas as suas contas em um só lugar',
+      onClick: () => router.push('/contas'),
     },
     {
       icon: <FiBell className='text-[#808088]' size={20} />,
       title: 'Notificações e alertas',
       subtitle: 'Lembre-se sempre dos seus objetivos',
+      onClick: () => router.push('/notificacoes'),
     },
     {
       icon: <FiShield className='text-[#808088]' size={20} />,
       title: 'Segurança',
       subtitle: 'Senhas, dados sensíveis e detalhes',
+      onClick: () => router.push('/seguranca'),
     },
     {
       icon: <FiHelpCircle className='text-[#808088]' size={20} />,
       title: 'Ajuda',
       subtitle: 'Conte conosco para tirar suas dúvidas',
+      onClick: () => router.push('/ajuda'),
     },
   ];
 
