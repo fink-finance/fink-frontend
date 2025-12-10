@@ -11,10 +11,10 @@ export const Navbar = () => {
         Minhas contas
       </Link>
       <Link
-        href='/home' // gastos
+        href='/movimentacoes' // gastos
         className='text-md font-medium text-zinc-600 hover:text-zinc-900 transition-colors'
       >
-        Meus gastos
+        Movimentações
       </Link>
       <Link
         href='/home'

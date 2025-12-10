@@ -77,6 +77,19 @@ export const API_ENDPOINTS = {
     DELETE: (id: string) => `/tipos-pagamento/${id}`,
   },
 
+  // Pluggy
+  PLUGGY: {
+    CONNECT_TOKEN: '/pluggy/connect-token',
+    ACCOUNTS: (itemId: string) => `/pluggy/accounts/${itemId}`,
+    TRANSACTIONS: (accountId: string) =>
+      `/pluggy/transactions/${accountId}`,
+    ACCOUNT_BALANCE: (accountId: string) =>
+      `/pluggy/accounts/${accountId}/balance`,
+    ACCOUNT_SUMMARY: (accountId: string) =>
+      `/pluggy/accounts/${accountId}/summary`,
+    DEBUG_AUTH: '/pluggy/_debug-auth',
+  },
+
   // Solicitações de Pagamento
   SOLICITACOES_PAGAMENTO: {
     LIST: '/solicitacoes-pagamento',
