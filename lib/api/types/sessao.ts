@@ -11,7 +11,7 @@ export interface LoginData {
 // ✅ Resposta do login
 export interface LoginResponse {
   id_sessao: number;
-  fk_pessoa_id_pessoa: number;
+  fk_pessoa_id_pessoa: string;
   token: string;
   criada_em: string; // "YYYY-MM-DD" format
   expira_em: string; // "YYYY-MM-DD" format
@@ -20,7 +20,7 @@ export interface LoginResponse {
 // ✅ Sessão completa
 export interface Sessao {
   id_sessao: number;
-  fk_pessoa_id_pessoa: number;
+  fk_pessoa_id_pessoa: string;
   token: string;
   criada_em: string;
   expira_em: string;

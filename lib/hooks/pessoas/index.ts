@@ -8,6 +8,7 @@ export {
   usePessoas,
   usePessoa,
   usePessoaByEmail,
+  useCurrentPessoa,
   pessoasKeys,
 } from './queries';
 

@@ -4,32 +4,33 @@
 
 import type { BaseFilters } from './base';
 
+// ✅ Status disponíveis para metas
+export enum MetaStatus {
+  EM_ANDAMENTO = 'em_andamento',
+  CONCLUIDA = 'concluida',
+  CANCELADA = 'cancelada',
+  ATRASADA = 'atrasada',
+}
+
 // ✅ Categorias disponíveis para metas
 export enum MetaCategoria {
-  EMERGENCIA = 'Emergência',
-  INVESTIMENTO = 'Investimento',
   VIAGEM = 'Viagem',
-  EDUCACAO = 'Educação',
-  DIVIDAS = 'Dívidas',
-  MORADIA = 'Moradia',
-  VEICULO = 'Veículo',
-  INTERCAMBIO = 'Intercâmbio',
-  SEGURANCA = 'Segurança',
-  SAUDE = 'Saúde',
+  COMPRAS = 'Compras',
+  EMERGENCIA = 'Emergência',
   OUTROS = 'Outros',
 }
 
 // ✅ Resposta completa da API (GET)
 export interface Meta {
   id_meta: number;
-  fk_pessoa_id_pessoa: number;
+  fk_pessoa_id_pessoa: string;
   titulo: string;
   categoria: string;
   valor_alvo: number;
   valor_atual: number;
   criada_em: string; // "YYYY-MM-DD" format
   termina_em: string; // "YYYY-MM-DD" format
-  status: string; // "em_andamento", "concluida", "cancelada"
+  status: MetaStatus;
 }
 
 // ✅ Tipo para criação de meta (POST) - apenas dados necessários
@@ -47,14 +48,30 @@ export interface UpdateMetaData {
   valor_alvo?: number;
   termina_em?: string;
   valor_atual?: number;
-  status?: string;
+  status?: MetaStatus;
+}
+
+// ✅ Tipo para movimentação de meta
+export interface Movimentacao {
+  id_movimentacao: number;
+  fk_meta_id_meta: number;
+  valor: number;
+  acao: 'adicionado' | 'retirado';
+  data: string; // ISO format: "2025-01-15T00:00:00Z"
+}
+
+// ✅ Tipo para atualizar saldo da meta
+export interface AtualizarSaldoData {
+  valor: number; // Valor positivo
+  action: 'adicionado' | 'retirado'; // Tipo de ação
+  data: string; // Formato de data: "YYYY-MM-DD"
 }
 
 // Filtros para listagem de metas
 export interface MetasFilters extends BaseFilters {
   titulo?: string;
-  status?: string;
-  fk_pessoa_id_pessoa?: number;
+  status?: MetaStatus;
+  fk_pessoa_id_pessoa?: string;
   // TODO: Implementar quando houver paginação no backend
   // page?: number;
   // limit?: number;

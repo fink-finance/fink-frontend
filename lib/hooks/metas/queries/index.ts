@@ -4,3 +4,4 @@
 
 export { useMetas, metasKeys } from './use-metas';
 export { useMeta } from './use-meta';
+export { useMovimentacoesMetas } from './use-movimentacoes';

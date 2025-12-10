@@ -20,7 +20,7 @@ export const useLogin = () => {
         // Opcional: salvar dados do usuário
         localStorage.setItem(
           'userId',
-          String(loginResponse.fk_pessoa_id_pessoa)
+          loginResponse.fk_pessoa_id_pessoa
         );
         localStorage.setItem('sessionId', String(loginResponse.id_sessao));
       }

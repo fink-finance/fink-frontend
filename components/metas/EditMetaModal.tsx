@@ -6,9 +6,12 @@ import { useEffect } from 'react';
 import * as z from 'zod';
 import { useUpdateMeta } from '@/lib/hooks/metas/mutations/use-update-meta';
 import type { UpdateMetaData } from '@/lib/api/types/meta';
-import { MetaCategoria } from '@/lib/api/types/meta';
+import { MetaCategoria, MetaStatus } from '@/lib/api/types/meta';
 import { Meta } from '@/lib/api/types';
+import { cn } from '@/lib/utils';
+import { CATEGORIA_ICONS } from '../metas/MetaCard';
 import { ModalDialog } from '../shared/ModalDialog';
+import { DatePickerInput } from '../shared/DatePickerInput';
 import {
   Form,
   FormControl,
@@ -32,7 +35,7 @@ const CATEGORIAS = Object.values(MetaCategoria);
 
 // Schema de validação Zod
 const formSchema = z.object({
-  status: z.enum(['em_andamento', 'cancelada']),
+  status: z.enum([MetaStatus.EM_ANDAMENTO, MetaStatus.CANCELADA]),
 
   titulo: z
     .string()
@@ -73,6 +76,13 @@ type EditMetaModalProps = {
   onOpenChange: (open: boolean) => void;
 };
 
+export const CATEGORY_BG_FORM_COLORS: Record<MetaCategoria, string> = {
+  [MetaCategoria.VIAGEM]: 'bg-accent',
+  [MetaCategoria.COMPRAS]: 'bg-blue-200',
+  [MetaCategoria.EMERGENCIA]: 'bg-red-300',
+  [MetaCategoria.OUTROS]: 'bg-blue-200',
+};
+
 export const EditMetaModal = ({
   meta,
   open,
@@ -83,7 +93,7 @@ export const EditMetaModal = ({
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      status: 'em_andamento',
+      status: MetaStatus.EM_ANDAMENTO,
       titulo: '',
       categoria: undefined,
       valor_alvo: 0,
@@ -95,7 +105,10 @@ export const EditMetaModal = ({
   useEffect(() => {
     if (meta) {
       form.reset({
-        status: meta.status === 'cancelada' ? 'cancelada' : 'em_andamento',
+        status:
+          meta.status === MetaStatus.CANCELADA
+            ? MetaStatus.CANCELADA
+            : MetaStatus.EM_ANDAMENTO,
         titulo: meta.titulo,
         categoria: meta.categoria || undefined,
         valor_alvo: Number(meta.valor_alvo),
@@ -156,25 +169,25 @@ export const EditMetaModal = ({
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <div className='flex rounded-full'>
+                    <div className='flex rounded-full border max-w-max'>
                       <Button
                         type='button'
-                        onClick={() => field.onChange('em_andamento')}
-                        className={`px-6 py-2 rounded-full font-medium transition-colors ${
-                          field.value === 'em_andamento'
-                            ? 'bg-accent text-white'
-                            : 'bg-gray-200 text-gray-600 hover:bg-gray-300'
+                        onClick={() => field.onChange(MetaStatus.EM_ANDAMENTO)}
+                        className={`px-6 py-2 rounded-full font-medium transition-colors shadow-none ${
+                          field.value === MetaStatus.EM_ANDAMENTO
+                            ? 'bg-[#2D9E20] text-white hover:bg-accent'
+                            : 'bg-white text-[#808088] hover:bg-accent hover:text-white'
                         }`}
                       >
                         Ativa
                       </Button>
                       <Button
                         type='button'
-                        onClick={() => field.onChange('cancelada')}
-                        className={`px-6 py-2 rounded-full font-medium transition-colors ${
-                          field.value === 'cancelada'
-                            ? 'bg-muted text-white'
-                            : 'bg-gray-200 text-gray-600 hover:bg-gray-300'
+                        onClick={() => field.onChange(MetaStatus.CANCELADA)}
+                        className={`px-6 py-2 rounded-full font-medium transition-colors shadow-none ${
+                          field.value === MetaStatus.CANCELADA
+                            ? 'bg-muted text-white hover:bg-zinc-500'
+                            : 'bg-white text-[#808088] hover:bg-zinc-500 hover:text-white'
                         }`}
                       >
                         Inativa
@@ -221,7 +234,7 @@ export const EditMetaModal = ({
                         </span>
                         <Input
                           type='number'
-                          step='0.01'
+                          step='1.00'
                           min='0'
                           {...field}
                           onChange={(e) =>
@@ -240,28 +253,62 @@ export const EditMetaModal = ({
               <FormField
                 control={form.control}
                 name='categoria'
-                render={({ field }) => (
-                  <FormItem className='space-y-0.5'>
-                    <FormLabel className='text-base'>
-                      Categoria (opcional)
-                    </FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value}>
-                      <FormControl>
-                        <SelectTrigger className='h-12 text-base'>
-                          <SelectValue placeholder='Selecione a categoria' />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {CATEGORIAS.map((categoria) => (
-                          <SelectItem key={categoria} value={categoria}>
-                            {categoria}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                render={({ field }) => {
+                  const IconComponent = field.value
+                    ? CATEGORIA_ICONS[field.value] ||
+                      CATEGORIA_ICONS[MetaCategoria.OUTROS]
+                    : null;
+
+                  return (
+                    <FormItem className='space-y-0.5'>
+                      <FormLabel className='text-base'>
+                        Categoria (opcional)
+                      </FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger className='h-12 text-base'>
+                            {field.value && IconComponent ? (
+                              <div className='flex items-center gap-2 w-full'>
+                                <div
+                                  className={cn(
+                                    'flex items-center justify-center w-6 h-6 rounded-full',
+                                    CATEGORY_BG_FORM_COLORS[
+                                      field.value as MetaCategoria
+                                    ]
+                                  )}
+                                >
+                                  <IconComponent className='w-3 h-3 text-black' />
+                                </div>
+                                <SelectValue>{field.value}</SelectValue>
+                              </div>
+                            ) : (
+                              <SelectValue placeholder='Selecione a categoria' />
+                            )}
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {CATEGORIAS.map((categoria) => {
+                            const ItemIcon =
+                              CATEGORIA_ICONS[categoria] ||
+                              CATEGORIA_ICONS[MetaCategoria.OUTROS];
+                            return (
+                              <SelectItem key={categoria} value={categoria}>
+                                <div className='flex items-center gap-2'>
+                                  <ItemIcon className='w-4 h-4' />
+                                  <span>{categoria}</span>
+                                </div>
+                              </SelectItem>
+                            );
+                          })}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  );
+                }}
               />
 
               {/* Data final */}
@@ -272,10 +319,9 @@ export const EditMetaModal = ({
                   <FormItem className='space-y-0.5'>
                     <FormLabel className='text-base'>Data final *</FormLabel>
                     <FormControl>
-                      <Input
-                        type='date'
-                        {...field}
-                        className='h-12 text-base'
+                      <DatePickerInput
+                        value={field.value}
+                        onChange={field.onChange}
                       />
                     </FormControl>
                     <FormMessage />

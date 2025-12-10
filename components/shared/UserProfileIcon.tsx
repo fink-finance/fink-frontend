@@ -1,6 +1,8 @@
 import Link from 'next/link';
 
 export const UserProfileIcon = () => {
+  const { data: pessoa, isLoading } = useCurrentPessoa();
+
   return (
     <Link
       href='/profile'

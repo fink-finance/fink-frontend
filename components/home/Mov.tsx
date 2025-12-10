@@ -1,11 +1,11 @@
 import { DashboardCard } from '../shared/DashboardCard';
 
-export const SaldoCard = () => {
+export const MovCard = () => {
   return (
     <DashboardCard
-      title='Saldo do mês'
+      title='Movimentações'
       className='h-full'
-      subtitle='Seus gastos e ganhos até agora'
+      subtitle='Gerencie todas as suas transações'
     >
       <div>{/* Área de conversa */}</div>
     </DashboardCard>

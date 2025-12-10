@@ -13,8 +13,8 @@ export const useDeletePessoa = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (id: number): Promise<void> => {
-      const url = API_ENDPOINTS.PESSOAS.DELETE(String(id));
+    mutationFn: async (id: string): Promise<void> => {
+      const url = API_ENDPOINTS.PESSOAS.DELETE(id);
       return api.delete<void>(url);
     },
     onSuccess: (_, deletedId) => {
