@@ -90,7 +90,7 @@ function formatMovimentacaoDateTime(dateStr: string | undefined) {
   };
 }
 
-function formatDisplayDate(dateStr?: string) {
+export function formatDisplayDate(dateStr?: string) {
   if (!dateStr) return 'dd/mm/aaaa';
 
   // Espera formato YYYY-MM-DD e evita usar new Date() pra não sofrer com fuso
@@ -227,8 +227,8 @@ export function MovimentacoesGrid({
 
   if (!ACCOUNT_ID) {
     return (
-      <div className="container flex min-h-[300px] items-center justify-center">
-        <p className="text-sm text-slate-600">
+      <div className='container flex min-h-[300px] items-center justify-center'>
+        <p className='text-sm text-slate-600'>
           Selecione uma conta para visualizar suas movimentações.
         </p>
       </div>
@@ -237,16 +237,16 @@ export function MovimentacoesGrid({
 
   if (isLoading) {
     return (
-      <div className="container flex min-h-[300px] items-center justify-center">
-        <p className="text-sm text-slate-600">Carregando movimentações...</p>
+      <div className='container flex min-h-[300px] items-center justify-center'>
+        <p className='text-sm text-slate-600'>Carregando movimentações...</p>
       </div>
     );
   }
 
   if (isError) {
     return (
-      <div className="container flex min-h-[300px] items-center justify-center">
-        <p className="text-sm text-red-500">
+      <div className='container flex min-h-[300px] items-center justify-center'>
+        <p className='text-sm text-red-500'>
           Erro ao carregar movimentações. Tente novamente mais tarde.
         </p>
       </div>
@@ -254,78 +254,74 @@ export function MovimentacoesGrid({
   }
 
   return (
-    <div className="container space-y-6 pb-10">
+    <div className='container space-y-6 pb-10'>
       {/* QUADRADÃO DE FILTROS */}
-      <div className="flex flex-wrap items-center gap-3 rounded-2xl border border-slate-200 bg-white px-5 py-4 shadow-sm">
+      <div className='flex flex-wrap items-center gap-3 rounded-2xl border border-slate-200 bg-white px-5 py-4 shadow-sm'>
         {/* Dropdown de contas (mockado) */}
-        <div className="relative">
+        <div className='relative'>
           <select
-            className="h-11 appearance-none rounded-xl border border-slate-200 bg-white pl-10 pr-8 text-sm font-medium text-slate-700"
-            defaultValue="todas"
+            className='h-11 appearance-none rounded-xl border border-slate-200 bg-white pl-10 pr-8 text-sm font-medium text-slate-700'
+            defaultValue='todas'
           >
-            <option value="todas">Todas as contas</option>
-            <option value="nubank">Nubank</option>
+            <option value='todas'>Todas as contas</option>
+            <option value='nubank'>Nubank</option>
           </select>
-          <span className="pointer-events-none absolute left-3 top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full bg-slate-100 text-xs font-semibold text-slate-700">
+          <span className='pointer-events-none absolute left-3 top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full bg-slate-100 text-xs font-semibold text-slate-700'>
             $
           </span>
-          <span className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-xs text-slate-400">
+          <span className='pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-xs text-slate-400'>
             ▼
           </span>
         </div>
 
         {/* Date picker custom -> filtro backend (from_date, to_date = hoje) */}
-        <div className="relative">
+        <div className='relative'>
           <button
-            type="button"
+            type='button'
             onClick={() => setIsCalendarOpen((open) => !open)}
-            className="inline-flex h-11 items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 text-sm text-slate-700"
+            className='inline-flex h-11 items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 text-sm text-slate-700'
           >
-            <CalendarIcon className="h-4 w-4 text-slate-500" />
+            <CalendarIcon className='h-4 w-4 text-slate-500' />
             <span>{formatDisplayDate(fromDate)}</span>
           </button>
 
           {isCalendarOpen && (
-            <div className="absolute z-20 mt-2 w-72 rounded-2xl border border-slate-200 bg-white p-4 shadow-lg">
+            <div className='absolute z-20 mt-2 w-72 rounded-2xl border border-slate-200 bg-white p-4 shadow-lg'>
               {/* Cabeçalho do mês */}
-              <div className="mb-3 flex items-center justify-between">
+              <div className='mb-3 flex items-center justify-between'>
                 <button
-                  type="button"
-                  onClick={() =>
-                    setCurrentMonth(new Date(year, month - 1, 1))
-                  }
-                  className="flex h-7 w-7 items-center justify-center rounded-full hover:bg-slate-100"
+                  type='button'
+                  onClick={() => setCurrentMonth(new Date(year, month - 1, 1))}
+                  className='flex h-7 w-7 items-center justify-center rounded-full hover:bg-slate-100'
                 >
-                  <ChevronLeft className="h-4 w-4 text-slate-600" />
+                  <ChevronLeft className='h-4 w-4 text-slate-600' />
                 </button>
 
-                <div className="text-sm font-medium text-slate-900">
+                <div className='text-sm font-medium text-slate-900'>
                   {MONTHS_PT_FULL[month]} de {year}
                 </div>
 
                 <button
-                  type="button"
-                  onClick={() =>
-                    setCurrentMonth(new Date(year, month + 1, 1))
-                  }
-                  className="flex h-7 w-7 items-center justify-center rounded-full hover:bg-slate-100"
+                  type='button'
+                  onClick={() => setCurrentMonth(new Date(year, month + 1, 1))}
+                  className='flex h-7 w-7 items-center justify-center rounded-full hover:bg-slate-100'
                 >
-                  <ChevronRight className="h-4 w-4 text-slate-600" />
+                  <ChevronRight className='h-4 w-4 text-slate-600' />
                 </button>
               </div>
 
               {/* Cabeçalho dos dias da semana */}
-              <div className="mb-1 grid grid-cols-7 gap-1 text-center text-xs font-medium text-slate-400">
+              <div className='mb-1 grid grid-cols-7 gap-1 text-center text-xs font-medium text-slate-400'>
                 {WEEKDAYS_PT.map((day, index) => (
                   <div key={index}>{day}</div>
                 ))}
               </div>
 
               {/* Dias do mês */}
-              <div className="grid grid-cols-7 gap-1 text-sm">
+              <div className='grid grid-cols-7 gap-1 text-sm'>
                 {calendarCells.map((day, idx) => {
                   if (day === null) {
-                    return <div key={idx} className="h-8" />;
+                    return <div key={idx} className='h-8' />;
                   }
 
                   const iso = toLocalIsoDate(year, month, day);
@@ -346,7 +342,7 @@ export function MovimentacoesGrid({
                   return (
                     <button
                       key={idx}
-                      type="button"
+                      type='button'
                       onClick={() => handleSelectDate(day)}
                       className={classes}
                     >
@@ -357,18 +353,18 @@ export function MovimentacoesGrid({
               </div>
 
               {/* Rodapé: limpar / hoje */}
-              <div className="mt-3 flex items-center justify-between text-xs">
+              <div className='mt-3 flex items-center justify-between text-xs'>
                 <button
-                  type="button"
+                  type='button'
                   onClick={handleClearDate}
-                  className="font-medium text-slate-500 hover:text-slate-700"
+                  className='font-medium text-slate-500 hover:text-slate-700'
                 >
                   Limpar
                 </button>
                 <button
-                  type="button"
+                  type='button'
                   onClick={handleToday}
-                  className="font-medium text-blue-600 hover:text-blue-700"
+                  className='font-medium text-blue-600 hover:text-blue-700'
                 >
                   Hoje
                 </button>
@@ -378,51 +374,51 @@ export function MovimentacoesGrid({
         </div>
 
         {/* Busca – filtro frontend pela descrição */}
-        <div className="relative flex-none w-[260px]">
-          <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+        <div className='relative flex-none w-[260px]'>
+          <Search className='pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400' />
           <input
-            type="text"
-            placeholder="Buscar movimentação"
+            type='text'
+            placeholder='Buscar movimentação'
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="h-11 w-full rounded-xl border border-slate-200 bg-white pl-10 pr-4 text-sm text-slate-700 placeholder:text-slate-400"
+            className='h-11 w-full rounded-xl border border-slate-200 bg-white pl-10 pr-4 text-sm text-slate-700 placeholder:text-slate-400'
           />
         </div>
       </div>
 
       {/* CARDS DE RESUMO */}
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+      <div className='grid grid-cols-1 gap-4 md:grid-cols-3'>
         {/* Saldo total */}
-        <div className="flex min-h-[120px] flex-col justify-center rounded-2xl border border-slate-100 bg-white px-8 py-6 shadow-sm">
-          <span className="text-xs font-medium uppercase tracking-wide text-slate-500">
+        <div className='flex min-h-[120px] flex-col justify-center rounded-2xl border border-slate-100 bg-white px-8 py-6 shadow-sm'>
+          <span className='text-xs font-medium uppercase tracking-wide text-slate-500'>
             Saldo total
           </span>
-          <span className="mt-2 text-3xl font-semibold text-slate-900">
+          <span className='mt-2 text-3xl font-semibold text-slate-900'>
             {formatCurrency(saldo)}
           </span>
         </div>
 
         {/* Entradas */}
-        <div className="flex min-h-[120px] flex-col justify-center rounded-2xl border border-slate-100 bg-white px-8 py-6 shadow-sm">
-          <span className="text-xs font-medium uppercase tracking-wide text-slate-500">
+        <div className='flex min-h-[120px] flex-col justify-center rounded-2xl border border-slate-100 bg-white px-8 py-6 shadow-sm'>
+          <span className='text-xs font-medium uppercase tracking-wide text-slate-500'>
             Entradas
           </span>
-          <div className="mt-2 flex items-center gap-2">
-            <ArrowDownCircle className="h-6 w-6 text-emerald-500" />
-            <span className="text-3xl font-normal text-slate-900">
+          <div className='mt-2 flex items-center gap-2'>
+            <ArrowDownCircle className='h-6 w-6 text-emerald-500' />
+            <span className='text-3xl font-normal text-slate-900'>
               {formatCurrency(totalEntradas)}
             </span>
           </div>
         </div>
 
         {/* Saídas */}
-        <div className="flex min-h-[120px] flex-col justify-center rounded-2xl border border-slate-100 bg-white px-8 py-6 shadow-sm">
-          <span className="text-xs font-medium uppercase tracking-wide text-slate-500">
+        <div className='flex min-h-[120px] flex-col justify-center rounded-2xl border border-slate-100 bg-white px-8 py-6 shadow-sm'>
+          <span className='text-xs font-medium uppercase tracking-wide text-slate-500'>
             Saídas
           </span>
-          <div className="mt-2 flex items-center gap-2">
-            <ArrowUpCircle className="h-6 w-6 text-rose-500" />
-            <span className="text-3xl font-normal text-slate-900">
+          <div className='mt-2 flex items-center gap-2'>
+            <ArrowUpCircle className='h-6 w-6 text-rose-500' />
+            <span className='text-3xl font-normal text-slate-900'>
               {formatCurrency(totalSaidas)}
             </span>
           </div>
@@ -430,43 +426,43 @@ export function MovimentacoesGrid({
       </div>
 
       {/* TABELA DE MOVIMENTAÇÕES */}
-      <div className="overflow-hidden rounded-2xl bg-white shadow-sm">
-        <div className="px-6 pt-4 text-xs font-semibold uppercase tracking-wide text-slate-500">
+      <div className='overflow-hidden rounded-2xl bg-white shadow-sm'>
+        <div className='px-6 pt-4 text-xs font-semibold uppercase tracking-wide text-slate-500'>
           Suas movimentações
         </div>
 
-        <div className="mt-2 overflow-x-auto pb-2">
-          <table className="min-w-full text-left text-base">
-            <thead className="text-xs font-semibold uppercase tracking-wide text-slate-600">
-              <tr className="bg-[#eef0ff]">
-                <th className="px-6 py-3">Data</th>
-                <th className="px-6 py-3">Descrição</th>
-                <th className="px-6 py-3">Banco</th>
-                <th className="px-6 py-3">Categoria</th>
-                <th className="px-6 py-3">Recorrência</th>
-                <th className="px-6 py-3 text-right">Valor</th>
-                <th className="px-4 py-3" />
+        <div className='mt-2 overflow-x-auto pb-2'>
+          <table className='min-w-full text-left text-base'>
+            <thead className='text-xs font-semibold uppercase tracking-wide text-slate-600'>
+              <tr className='bg-[#eef0ff]'>
+                <th className='px-6 py-3'>Data</th>
+                <th className='px-6 py-3'>Descrição</th>
+                <th className='px-6 py-3'>Banco</th>
+                <th className='px-6 py-3'>Categoria</th>
+                <th className='px-6 py-3'>Recorrência</th>
+                <th className='px-6 py-3 text-right'>Valor</th>
+                <th className='px-4 py-3' />
               </tr>
             </thead>
             <tbody>
               {movimentacoesFiltradas.map((mov: Movimentacao) => (
                 <tr
                   key={mov.id}
-                  className="border-t border-slate-100 bg-white text-base transition-colors hover:bg-slate-50/80"
+                  className='border-t border-slate-100 bg-white text-base transition-colors hover:bg-slate-50/80'
                 >
                   {/* Data */}
-                  <td className="px-6 py-4 align-middle">
+                  <td className='px-6 py-4 align-middle'>
                     {(() => {
                       const { dateLabel, timeLabel } =
                         formatMovimentacaoDateTime(mov.data);
 
                       return (
-                        <div className="flex flex-col">
-                          <span className="text-base font-medium text-slate-900">
+                        <div className='flex flex-col'>
+                          <span className='text-base font-medium text-slate-900'>
                             {dateLabel}
                           </span>
                           {timeLabel && (
-                            <span className="text-xs font-medium text-slate-500">
+                            <span className='text-xs font-medium text-slate-500'>
                               {timeLabel}
                             </span>
                           )}
@@ -476,30 +472,30 @@ export function MovimentacoesGrid({
                   </td>
 
                   {/* Descrição */}
-                  <td className="px-6 py-4 align-middle">
-                    <span className="text-base font-medium text-slate-900">
+                  <td className='px-6 py-4 align-middle'>
+                    <span className='text-base font-medium text-slate-900'>
                       {mov.descricao}
                     </span>
                   </td>
 
                   {/* Banco */}
-                  <td className="px-6 py-4 align-middle">
-                    <div className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-full bg-[#8A05BE]">
+                  <td className='px-6 py-4 align-middle'>
+                    <div className='flex h-9 w-9 items-center justify-center overflow-hidden rounded-full bg-[#8A05BE]'>
                       <Image
-                        src="/images/banks/nubank-logo.png"
-                        alt="Nubank"
+                        src='/images/banks/nubank-logo.png'
+                        alt='Nubank'
                         width={36}
                         height={36}
-                        className="h-full w-full object-cover"
+                        className='h-full w-full object-cover'
                       />
                     </div>
                   </td>
 
                   {/* Categoria */}
-                  <td className="px-6 py-4 align-middle">
+                  <td className='px-6 py-4 align-middle'>
                     <span
                       className={`inline-flex items-center rounded-full px-4 py-1.5 text-sm font-semibold ${categoriaPillClasses(
-                        mov.categoria,
+                        mov.categoria
                       )}`}
                     >
                       {mov.categoria}
@@ -507,13 +503,13 @@ export function MovimentacoesGrid({
                   </td>
 
                   {/* Recorrência */}
-                  <td className="px-6 py-4 align-middle text-base font-medium text-slate-900">
+                  <td className='px-6 py-4 align-middle text-base font-medium text-slate-900'>
                     {mov.recorrencia}
                   </td>
 
                   {/* Valor + método de pagamento */}
-                  <td className="px-6 py-4 align-middle text-right">
-                    <div className="flex flex-col items-end">
+                  <td className='px-6 py-4 align-middle text-right'>
+                    <div className='flex flex-col items-end'>
                       <span
                         className={
                           mov.tipo === 'entrada'
@@ -523,19 +519,19 @@ export function MovimentacoesGrid({
                       >
                         {formatCurrency(mov.valor)}
                       </span>
-                      <span className="text-xs font-medium text-slate-500">
+                      <span className='text-xs font-medium text-slate-500'>
                         {mov.origemPagamento}
                       </span>
                     </div>
                   </td>
 
                   {/* Botão info */}
-                  <td className="px-4 py-4 pr-6 align-middle">
+                  <td className='px-4 py-4 pr-6 align-middle'>
                     <button
-                      className="rounded-full border border-slate-300 p-2 hover:bg-slate-100"
+                      className='rounded-full border border-slate-300 p-2 hover:bg-slate-100'
                       onClick={() => handleOpenDetails(mov)}
                     >
-                      <Info className="h-5 w-5 text-slate-900" />
+                      <Info className='h-5 w-5 text-slate-900' />
                     </button>
                   </td>
                 </tr>
@@ -545,9 +541,10 @@ export function MovimentacoesGrid({
                 <tr>
                   <td
                     colSpan={7}
-                    className="px-6 py-8 text-center text-sm text-slate-500"
+                    className='px-6 py-8 text-center text-sm text-slate-500'
                   >
-                    Nenhuma movimentação encontrada para os filtros selecionados.
+                    Nenhuma movimentação encontrada para os filtros
+                    selecionados.
                   </td>
                 </tr>
               )}

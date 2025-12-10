@@ -123,9 +123,7 @@ export const MetaCard = ({
     CATEGORIA_ICONS[meta.categoria] || CATEGORIA_ICONS[MetaCategoria.OUTROS];
 
   // Determinar se deve usar gradiente no ícone
-  const shouldUseGradient =
-    meta.status === MetaStatus.CONCLUIDA &&
-    meta.categoria === MetaCategoria.VIAGEM;
+  const shouldUseGradient = meta.status === MetaStatus.CONCLUIDA;
 
   // Determinar cor do ícone baseado no status
   const iconColorClass =
