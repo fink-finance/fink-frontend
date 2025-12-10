@@ -14,7 +14,7 @@ export const Navbar = () => {
 
   const navLinks: NavLink[] = [
     { href: '/home', label: 'Categorias' },
-    { href: '/home', label: 'Movimentações' },
+    { href: '/movimentacoes', label: 'Movimentações' },
     { href: '/home', label: 'Espaço Finker' },
     { href: '/metas', label: 'Metas' },
     { href: '/home', label: 'Academy', disabled: true },
