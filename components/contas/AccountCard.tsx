@@ -1,4 +1,3 @@
-// components/contas/AccountCard.tsx
 import React from 'react';
 import Image from 'next/image';
 import { MoreHorizontal } from 'lucide-react';
