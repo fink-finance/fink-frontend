@@ -11,6 +11,7 @@ import { Meta } from '@/lib/api/types';
 import { cn } from '@/lib/utils';
 import { CATEGORIA_ICONS } from '../metas/MetaCard';
 import { ModalDialog } from '../shared/ModalDialog';
+import { DatePickerInput } from '../shared/DatePickerInput';
 import {
   Form,
   FormControl,
@@ -233,7 +234,7 @@ export const EditMetaModal = ({
                         </span>
                         <Input
                           type='number'
-                          step='0.01'
+                          step='1.00'
                           min='0'
                           {...field}
                           onChange={(e) =>
@@ -318,10 +319,9 @@ export const EditMetaModal = ({
                   <FormItem className='space-y-0.5'>
                     <FormLabel className='text-base'>Data final *</FormLabel>
                     <FormControl>
-                      <Input
-                        type='date'
-                        {...field}
-                        className='h-12 text-base'
+                      <DatePickerInput
+                        value={field.value}
+                        onChange={field.onChange}
                       />
                     </FormControl>
                     <FormMessage />

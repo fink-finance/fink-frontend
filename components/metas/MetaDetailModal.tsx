@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { Meta } from '@/lib/api/types';
 import { ModalDialog } from '../shared/ModalDialog';
+import { DatePickerInput } from '../shared/DatePickerInput';
 import { MetaCard } from './MetaCard';
 import { EditMetaModal } from './EditMetaModal';
 import { useMovimentacoesMetas } from '@/lib/hooks/metas/queries/use-movimentacoes';
@@ -229,10 +230,9 @@ export const MetaDetailModal = ({
                         <FormItem className='space-y-0.5'>
                           <FormLabel className='text-base'>Quando? *</FormLabel>
                           <FormControl>
-                            <Input
-                              type='date'
-                              {...field}
-                              className='h-12 text-base'
+                            <DatePickerInput
+                              value={field.value}
+                              onChange={field.onChange}
                             />
                           </FormControl>
                           <FormMessage />
