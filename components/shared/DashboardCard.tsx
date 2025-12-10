@@ -10,6 +10,7 @@ interface DashboardCardProps {
   icon?: React.ReactNode;
   onClick?: () => void;
   soon?: React.ReactNode;
+  disableScroll?: boolean;
 }
 
 export const DashboardCard = ({
@@ -20,6 +21,7 @@ export const DashboardCard = ({
   icon = <ArrowRight className='lg:w-[38px] lg:h-[38px] w-6 h-6' />,
   onClick,
   soon,
+  disableScroll = false,
 }: DashboardCardProps) => {
   const isDisabled = !onClick;
 
@@ -66,7 +68,12 @@ export const DashboardCard = ({
             )}
           </div>
         </CardHeader>
-        <CardContent className='flex-1 overflow-auto min-h-0'>
+        <CardContent
+          className={cn(
+            'flex-1 min-h-0',
+            disableScroll ? 'overflow-hidden' : 'overflow-auto'
+          )}
+        >
           {children}
         </CardContent>
       </Card>

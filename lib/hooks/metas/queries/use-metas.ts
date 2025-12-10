@@ -15,6 +15,8 @@ export const metasKeys = {
   list: (filters?: MetasFilters) => [...metasKeys.lists(), filters] as const,
   details: () => [...metasKeys.all, 'detail'] as const,
   detail: (id: number) => [...metasKeys.details(), id] as const,
+  movimentacoes: () => [...metasKeys.all, 'movimentacoes'] as const,
+  movimentacoesByMeta: (id: number) => [...metasKeys.movimentacoes(), id] as const,
 };
 
 // ✅ Hook para listar metas do usuário autenticado

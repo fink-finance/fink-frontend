@@ -11,6 +11,7 @@ import {
   Calendar,
 } from 'react-bootstrap-icons';
 import { cn } from '@/lib/utils';
+import { GradientIcon } from '../shared/GradientIcon';
 
 type MetaCardProps = {
   meta: Meta;
@@ -82,10 +83,10 @@ export const CATEGORY_BG_COLORS: Record<MetaCategoria, string> = {
 };
 
 export const CATEGORY_TEXT_COLORS: Record<MetaCategoria, string> = {
-  [MetaCategoria.VIAGEM]: 'text-[#EBFDFD]',
-  [MetaCategoria.COMPRAS]: 'text-blue-200',
-  [MetaCategoria.EMERGENCIA]: 'text-[#FCF3F3]',
-  [MetaCategoria.OUTROS]: 'text-blue-200',
+  [MetaCategoria.VIAGEM]: 'text-[#A4F8F5]',
+  [MetaCategoria.COMPRAS]: 'text-blue-400',
+  [MetaCategoria.EMERGENCIA]: 'text-[#EEA0A0]',
+  [MetaCategoria.OUTROS]: 'text-blue-400',
 };
 
 const PROGRESS_BAR_COLORS: Record<MetaStatus, string> = {
@@ -121,6 +122,11 @@ export const MetaCard = ({
   const CategoryIcon =
     CATEGORIA_ICONS[meta.categoria] || CATEGORIA_ICONS[MetaCategoria.OUTROS];
 
+  // Determinar se deve usar gradiente no ícone
+  const shouldUseGradient =
+    meta.status === MetaStatus.CONCLUIDA &&
+    meta.categoria === MetaCategoria.VIAGEM;
+
   // Determinar cor do ícone baseado no status
   const iconColorClass =
     meta.status === MetaStatus.CANCELADA
@@ -138,17 +144,18 @@ export const MetaCard = ({
         {/* Ícone da categoria no canto superior direito */}
         <div
           className={cn(
-            'absolute top-[-20px] right-[-20px] pointer-events-none',
-            meta.categoria === MetaCategoria.VIAGEM ? 'opacity-100' : ''
+            'absolute top-[-20px] right-[-20px] pointer-events-none'
           )}
         >
-          <CategoryIcon
+          <GradientIcon
+            Icon={CategoryIcon}
+            useGradient={shouldUseGradient}
             className={cn(
               dashboard
-                ? 'w-24 h-24 md:w-32 md:h-32 lg:w-40 lg:h-40'
+                ? 'w-16 h-16 md:w-24 md:h-24 lg:w-32 lg:h-32'
                 : 'w-24 h-24 md:w-32 md:h-32 lg:w-40 lg:h-40',
               meta.categoria === MetaCategoria.VIAGEM && '-rotate-45',
-              iconColorClass
+              !shouldUseGradient && iconColorClass
             )}
           />
         </div>

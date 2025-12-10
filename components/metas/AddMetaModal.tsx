@@ -7,11 +7,7 @@ import { useCreateMeta } from '@/lib/hooks/metas/mutations/use-create-meta';
 import type { CreateMetaData } from '@/lib/api/types/meta';
 import { MetaCategoria } from '@/lib/api/types/meta';
 import { cn } from '@/lib/utils';
-import {
-  CATEGORIA_ICONS,
-  CATEGORY_BG_COLORS,
-  CATEGORY_TEXT_COLORS,
-} from './MetaCard';
+import { CATEGORIA_ICONS } from './MetaCard';
 import { ModalDialog } from '../shared/ModalDialog';
 import {
   Form,
@@ -30,6 +26,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { CATEGORY_BG_FORM_COLORS } from './EditMetaModal';
 
 // ✅ Categorias disponíveis
 const CATEGORIAS = Object.values(MetaCategoria);
@@ -201,23 +198,12 @@ export const AddMetaModal = ({ open, onOpenChange }: AddMetaModalProps) => {
                                 <div
                                   className={cn(
                                     'flex items-center justify-center w-6 h-6 rounded-full',
-                                    CATEGORY_BG_COLORS[
+                                    CATEGORY_BG_FORM_COLORS[
                                       field.value as MetaCategoria
-                                    ] ||
-                                      CATEGORY_BG_COLORS[MetaCategoria.OUTROS]
+                                    ]
                                   )}
                                 >
-                                  <IconComponent
-                                    className={cn(
-                                      'w-4 h-4',
-                                      CATEGORY_TEXT_COLORS[
-                                        field.value as MetaCategoria
-                                      ] ||
-                                        CATEGORY_TEXT_COLORS[
-                                          MetaCategoria.OUTROS
-                                        ]
-                                    )}
-                                  />
+                                  <IconComponent className='w-3 h-3 text-black' />
                                 </div>
                                 <SelectValue>{field.value}</SelectValue>
                               </div>

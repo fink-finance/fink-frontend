@@ -9,11 +9,7 @@ import type { UpdateMetaData } from '@/lib/api/types/meta';
 import { MetaCategoria, MetaStatus } from '@/lib/api/types/meta';
 import { Meta } from '@/lib/api/types';
 import { cn } from '@/lib/utils';
-import {
-  CATEGORIA_ICONS,
-  CATEGORY_BG_COLORS,
-  CATEGORY_TEXT_COLORS,
-} from '../metas/MetaCard';
+import { CATEGORIA_ICONS } from '../metas/MetaCard';
 import { ModalDialog } from '../shared/ModalDialog';
 import {
   Form,
@@ -77,6 +73,13 @@ type EditMetaModalProps = {
   meta: Meta | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+};
+
+export const CATEGORY_BG_FORM_COLORS: Record<MetaCategoria, string> = {
+  [MetaCategoria.VIAGEM]: 'bg-accent',
+  [MetaCategoria.COMPRAS]: 'bg-blue-200',
+  [MetaCategoria.EMERGENCIA]: 'bg-red-300',
+  [MetaCategoria.OUTROS]: 'bg-blue-200',
 };
 
 export const EditMetaModal = ({
@@ -165,14 +168,14 @@ export const EditMetaModal = ({
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <div className='flex rounded-full'>
+                    <div className='flex rounded-full border max-w-max'>
                       <Button
                         type='button'
                         onClick={() => field.onChange(MetaStatus.EM_ANDAMENTO)}
-                        className={`px-6 py-2 rounded-full font-medium transition-colors ${
+                        className={`px-6 py-2 rounded-full font-medium transition-colors shadow-none ${
                           field.value === MetaStatus.EM_ANDAMENTO
-                            ? 'bg-accent text-white'
-                            : 'bg-gray-200 text-gray-600 hover:bg-gray-300'
+                            ? 'bg-[#2D9E20] text-white hover:bg-accent'
+                            : 'bg-white text-[#808088] hover:bg-accent hover:text-white'
                         }`}
                       >
                         Ativa
@@ -180,10 +183,10 @@ export const EditMetaModal = ({
                       <Button
                         type='button'
                         onClick={() => field.onChange(MetaStatus.CANCELADA)}
-                        className={`px-6 py-2 rounded-full font-medium transition-colors ${
+                        className={`px-6 py-2 rounded-full font-medium transition-colors shadow-none ${
                           field.value === MetaStatus.CANCELADA
-                            ? 'bg-muted text-white'
-                            : 'bg-gray-200 text-gray-600 hover:bg-gray-300'
+                            ? 'bg-muted text-white hover:bg-zinc-500'
+                            : 'bg-white text-[#808088] hover:bg-zinc-500 hover:text-white'
                         }`}
                       >
                         Inativa
@@ -271,23 +274,12 @@ export const EditMetaModal = ({
                                 <div
                                   className={cn(
                                     'flex items-center justify-center w-6 h-6 rounded-full',
-                                    CATEGORY_BG_COLORS[
+                                    CATEGORY_BG_FORM_COLORS[
                                       field.value as MetaCategoria
-                                    ] ||
-                                      CATEGORY_BG_COLORS[MetaCategoria.OUTROS]
+                                    ]
                                   )}
                                 >
-                                  <IconComponent
-                                    className={cn(
-                                      'w-4 h-4',
-                                      CATEGORY_TEXT_COLORS[
-                                        field.value as MetaCategoria
-                                      ] ||
-                                        CATEGORY_TEXT_COLORS[
-                                          MetaCategoria.OUTROS
-                                        ]
-                                    )}
-                                  />
+                                  <IconComponent className='w-3 h-3 text-black' />
                                 </div>
                                 <SelectValue>{field.value}</SelectValue>
                               </div>

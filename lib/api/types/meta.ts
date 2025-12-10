@@ -51,6 +51,22 @@ export interface UpdateMetaData {
   status?: MetaStatus;
 }
 
+// ✅ Tipo para movimentação de meta
+export interface Movimentacao {
+  id_movimentacao: number;
+  fk_meta_id_meta: number;
+  valor: number;
+  acao: 'adicionado' | 'retirado';
+  data: string; // ISO format: "2025-01-15T00:00:00Z"
+}
+
+// ✅ Tipo para atualizar saldo da meta
+export interface AtualizarSaldoData {
+  valor: number; // Valor positivo
+  action: 'adicionado' | 'retirado'; // Tipo de ação
+  data: string; // Formato de data: "YYYY-MM-DD"
+}
+
 // Filtros para listagem de metas
 export interface MetasFilters extends BaseFilters {
   titulo?: string;
