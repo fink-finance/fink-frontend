@@ -8,7 +8,7 @@ import { Meta } from '@/lib/api/types';
 import { ModalDialog } from '../shared/ModalDialog';
 import { MetaCard } from './MetaCard';
 import { EditMetaModal } from './EditMetaModal';
-import { useMovimentacoes } from '@/lib/hooks/metas/queries/use-movimentacoes';
+import { useMovimentacoesMetas } from '@/lib/hooks/metas/queries/use-movimentacoes';
 import { useAtualizarSaldo } from '@/lib/hooks/metas/mutations/use-atualizar-saldo';
 import type { AtualizarSaldoData } from '@/lib/api/types/meta';
 import { Button } from '../ui/button';
@@ -72,7 +72,7 @@ export const MetaDetailModal = ({
 
   // Buscar movimentações da meta
   const { data: movimentacoes = [], isLoading: isLoadingMovimentacoes } =
-    useMovimentacoes(meta?.id_meta ?? 0, {
+    useMovimentacoesMetas(meta?.id_meta ?? 0, {
       enabled: !!meta?.id_meta && open,
     });
 

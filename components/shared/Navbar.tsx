@@ -13,11 +13,11 @@ export const Navbar = () => {
   const pathname = usePathname();
 
   const navLinks: NavLink[] = [
-    { href: '/home', label: 'Categorias' },
+    { href: '/categorias', label: 'Categorias', disabled: true },
     { href: '/movimentacoes', label: 'Movimentações' },
     { href: '/home', label: 'Espaço Finker' },
     { href: '/metas', label: 'Metas' },
-    { href: '/home', label: 'Academy', disabled: true },
+    { href: '/academy', label: 'Academy', disabled: true },
   ];
 
   const isActive = (href: string) => {

@@ -9,7 +9,7 @@ import { API_ENDPOINTS } from '@/lib/api/endpoints';
 import type { Movimentacao } from '@/lib/api/types/meta';
 import { metasKeys } from './use-metas';
 
-export const useMovimentacoes = (
+export const useMovimentacoesMetas = (
   idMeta: number,
   options?: { enabled?: boolean }
 ) => {
@@ -24,4 +24,3 @@ export const useMovimentacoes = (
     gcTime: 5 * 60 * 1000, // 5 minutos
   });
 };
-
