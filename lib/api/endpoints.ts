@@ -31,6 +31,8 @@ export const API_ENDPOINTS = {
     GET_BY_ID: (id: string) => `/metas/${id}`,
     UPDATE: (id: string) => `/metas/${id}`,
     DELETE: (id: string) => `/metas/${id}`,
+    ATUALIZAR_SALDO: (id: string) => `/metas/${id}/atualizar_saldo`,
+    MOVIMENTACOES: (id: string) => `/metas/movimentacao/${id}`,
   },
 
   // Planos

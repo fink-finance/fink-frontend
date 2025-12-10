@@ -5,3 +5,4 @@
 export { usePessoas, pessoasKeys } from './use-pessoas';
 export { usePessoa } from './use-pessoa';
 export { usePessoaByEmail } from './use-pessoa-by-email';
+export { useCurrentPessoa } from './use-current-pessoa';

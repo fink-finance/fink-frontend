@@ -13,7 +13,9 @@ export const EmptyMetasCard = () => {
         title='Criar nova meta'
         subtitle='Comece agora a planejar seus sonhos'
         className='h-full bg-emptyCardBg overflow-hidden'
-        icon={<AddMetaButton onClick={() => setIsModalOpen(true)} />}
+        icon={<AddMetaButton asChild />}
+        onClick={() => setIsModalOpen(true)}
+        disableScroll
       >
         <div className='relative w-full flex-1 min-h-[200px]'>
           {/* Imagem de fundo - esticada e posicionada para baixo */}

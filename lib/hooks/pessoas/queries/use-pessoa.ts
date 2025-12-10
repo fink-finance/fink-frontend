@@ -9,11 +9,11 @@ import { API_ENDPOINTS } from '@/lib/api/endpoints';
 import type { Pessoa } from '@/lib/api/types';
 import { pessoasKeys } from './use-pessoas';
 
-export const usePessoa = (id: number, options?: { enabled?: boolean }) => {
+export const usePessoa = (id: string, options?: { enabled?: boolean }) => {
   return useQuery({
     queryKey: pessoasKeys.detail(id),
     queryFn: async (): Promise<Pessoa> => {
-      const url = API_ENDPOINTS.PESSOAS.GET_BY_ID(String(id));
+      const url = API_ENDPOINTS.PESSOAS.GET_BY_ID(id);
       return api.get<Pessoa>(url);
     },
     enabled: options?.enabled ?? !!id, // só executa se tiver ID válido

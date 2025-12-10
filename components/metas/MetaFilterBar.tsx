@@ -6,25 +6,47 @@ import { FilterBarLayout } from '../shared/FilterBarLayout';
 import { useState } from 'react';
 import { AddMetaModal } from './AddMetaModal';
 
-export function MetaFilterBar() {
+// Tipo para os filtros disponíveis
+export type MetaFilterType = 'todas' | 'ativas' | 'inativas' | 'concluidas';
+
+type MetaFilterBarProps = {
+  activeFilter: MetaFilterType;
+  onFilterChange: (filter: MetaFilterType) => void;
+};
+
+export function MetaFilterBar({
+  activeFilter,
+  onFilterChange,
+}: MetaFilterBarProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const filters: { label: string; value: MetaFilterType }[] = [
+    { label: 'Todas', value: 'todas' },
+    { label: 'Ativas', value: 'ativas' },
+    { label: 'Inativas', value: 'inativas' },
+    { label: 'Concluídas', value: 'concluidas' },
+  ];
 
   return (
     <FilterBarLayout title='Suas metas'>
       <>
         <div className='flex items-center gap-2'>
-          <Button variant='outline' size='sm' radius='full'>
-            Todas
-          </Button>
-          <Button variant='outline' size='sm' radius='full'>
-            Ativas
-          </Button>
-          <Button variant='outline' size='sm' radius='full'>
-            Inativas
-          </Button>
-          <Button variant='outline' size='sm' radius='full'>
-            Concluídas
-          </Button>
+          {filters.map((filter) => (
+            <Button
+              key={filter.value}
+              variant={'outline'}
+              size='sm'
+              radius='full'
+              onClick={() => onFilterChange(filter.value)}
+              className={
+                filter.value === activeFilter
+                  ? 'border-primary bg-[#EFF1FF] text-primary'
+                  : ''
+              }
+            >
+              {filter.label}
+            </Button>
+          ))}
         </div>
         <div className='flex items-center'>
           <Button size='lg' onClick={() => setIsModalOpen(true)}>

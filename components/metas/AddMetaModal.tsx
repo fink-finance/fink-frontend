@@ -6,6 +6,8 @@ import * as z from 'zod';
 import { useCreateMeta } from '@/lib/hooks/metas/mutations/use-create-meta';
 import type { CreateMetaData } from '@/lib/api/types/meta';
 import { MetaCategoria } from '@/lib/api/types/meta';
+import { cn } from '@/lib/utils';
+import { CATEGORIA_ICONS } from './MetaCard';
 import { ModalDialog } from '../shared/ModalDialog';
 import {
   Form,
@@ -24,6 +26,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { CATEGORY_BG_FORM_COLORS } from './EditMetaModal';
 
 // ✅ Categorias disponíveis
 const CATEGORIAS = Object.values(MetaCategoria);
@@ -173,31 +176,62 @@ export const AddMetaModal = ({ open, onOpenChange }: AddMetaModalProps) => {
               <FormField
                 control={form.control}
                 name='categoria'
-                render={({ field }) => (
-                  <FormItem className='space-y-0.5'>
-                    <FormLabel className='text-base'>
-                      Categoria (opcional)
-                    </FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger className='h-12 text-base'>
-                          <SelectValue placeholder='Selecione a categoria' />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {CATEGORIAS.map((categoria) => (
-                          <SelectItem key={categoria} value={categoria}>
-                            {categoria}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                render={({ field }) => {
+                  const IconComponent = field.value
+                    ? CATEGORIA_ICONS[field.value] ||
+                      CATEGORIA_ICONS[MetaCategoria.OUTROS]
+                    : null;
+
+                  return (
+                    <FormItem className='space-y-0.5'>
+                      <FormLabel className='text-base'>
+                        Categoria (opcional)
+                      </FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger className='h-12 text-base'>
+                            {field.value && IconComponent ? (
+                              <div className='flex items-center gap-2 w-full'>
+                                <div
+                                  className={cn(
+                                    'flex items-center justify-center w-6 h-6 rounded-full',
+                                    CATEGORY_BG_FORM_COLORS[
+                                      field.value as MetaCategoria
+                                    ]
+                                  )}
+                                >
+                                  <IconComponent className='w-3 h-3 text-black' />
+                                </div>
+                                <SelectValue>{field.value}</SelectValue>
+                              </div>
+                            ) : (
+                              <SelectValue placeholder='Selecione a categoria' />
+                            )}
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {CATEGORIAS.map((categoria) => {
+                            const ItemIcon =
+                              CATEGORIA_ICONS[categoria] ||
+                              CATEGORIA_ICONS[MetaCategoria.OUTROS];
+                            return (
+                              <SelectItem key={categoria} value={categoria}>
+                                <div className='flex items-center gap-2'>
+                                  <ItemIcon className='w-4 h-4' />
+                                  <span>{categoria}</span>
+                                </div>
+                              </SelectItem>
+                            );
+                          })}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  );
+                }}
               />
 
               {/* Data final */}
