@@ -21,6 +21,8 @@ export const ContasCard = () => {
       title="Minhas contas"
       className="h-full"
       subtitle="Todas as suas contas em um só lugar"
+      hasArrow
+      arrowHref="/contas"
     >
       {/* Conteúdo em coluna:
           - lista de contas ocupa o meio
@@ -50,11 +52,9 @@ export const ContasCard = () => {
           {!isLoading && !isError && accounts.length > 0 && (
             <ul className="space-y-3">
               {accounts.map((acc: PluggyAccount) => {
-                const nameBase =
-                  acc.institution?.name ?? acc.name ?? 'Conta';
+                const nameBase = acc.institution?.name ?? acc.name ?? 'Conta';
 
-                const isNubank =
-                  nameBase.toLowerCase().includes('nu');
+                const isNubank = nameBase.toLowerCase().includes('nu');
 
                 return (
                   <li
@@ -104,7 +104,7 @@ export const ContasCard = () => {
           )}
         </div>
 
-        {/* BOTÃO CONECTAR CONTA – embaixo à esquerda */}
+        {/* BOTÃO CONECTAR CONTA – embaixo à direita */}
         <div className="mt-4 flex items-center justify-end">
           <PluggyButton />
         </div>

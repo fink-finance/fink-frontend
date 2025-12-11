@@ -1,5 +1,7 @@
+// ProfileHeader.tsx
 import { Button } from '@/components/ui/button';
 import { FiEdit } from 'react-icons/fi';
+import Image from 'next/image';
 
 interface ProfileHeaderProps {
   nome: string;
@@ -17,44 +19,39 @@ export function ProfileHeader({
   telefone,
 }: ProfileHeaderProps) {
   return (
-    <div className='flex items-start justify-between mb-6'>
-      <div className='flex items-start gap-4'>
-        <div className='h-[55px] w-[55px] rounded-full bg-primary flex items-center justify-center text-white text-xl font-bold flex-shrink-0'>
-          {nome.charAt(0)}
+    <div className="mb-8 flex items-start justify-between">
+      <div className="flex items-start gap-4">
+        <div className="h-[64px] w-[64px] flex-shrink-0 overflow-hidden rounded-full bg-primary">
+          <Image
+            src="/images/profile/Foto Gabriel.jpg"
+            alt={nome}
+            width={64}
+            height={64}
+            className="h-full w-full object-cover"
+          />
         </div>
 
         <div>
-          <h2
-            className='text-2xl font-bold text-foreground mb-1'
-            style={{ fontFamily: 'DM Sans' }}
-          >
+          <h2 className="mb-1 text-3xl font-semibold text-slate-900">
             {nome}
           </h2>
-          <p
-            className='text-sm text-muted mb-2'
-            style={{ fontFamily: 'DM Sans' }}
-          >
-            {idade} anos
-          </p>
+          <p className="mb-3 text-base text-slate-500">{idade} anos</p>
 
-          <div
-            className='flex items-center gap-4 text-base text-foreground'
-            style={{ fontFamily: 'DM Sans' }}
-          >
+          <div className="flex flex-wrap items-center gap-4 text-base text-slate-900">
             <span>{cpf}</span>
-            <span className='h-4 w-px bg-border' />
+            <span className="h-4 w-px bg-slate-200" />
             <span>{email}</span>
-            <span className='h-4 w-px bg-border' />
+            <span className="h-4 w-px bg-slate-200" />
             <span>{telefone}</span>
           </div>
         </div>
       </div>
 
       <Button
-        variant='outline'
-        className='h-[34px] px-3.5 gap-2 text-sm font-medium'
+        variant="outline"
+        className="flex h-[38px] items-center gap-2 px-4 text-sm font-medium"
       >
-        <FiEdit size={16} />
+        <FiEdit size={18} />
         Editar
       </Button>
     </div>
