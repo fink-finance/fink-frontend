@@ -6,17 +6,19 @@
 import { ModalDialog } from '@/components/shared/ModalDialog';
 import { useAlertasNaoLidos, useMarkAlertaAsRead } from '@/lib/hooks/alertas';
 import { Alerta } from '@/lib/api/types';
-import { X, Infinity } from 'react-bootstrap-icons';
+import {
+  X,
+  Infinity,
+  ArrowUpCircle,
+  ArrowDownCircle,
+  Bell,
+  Suitcase2,
+} from 'react-bootstrap-icons';
 import { formatDistanceToNow } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { useMemo, useState } from 'react';
-import {
-  ArrowUp,
-  ArrowDown,
-  Lightbulb,
-  PiggyBank,
-} from 'react-bootstrap-icons';
 import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 // ========================================
 // TIPOS
@@ -33,45 +35,91 @@ type AlertaGroup = {
 
 type FilterType = 'todos' | 'hoje' | 'ultima-semana' | 'ultimo-mes';
 
+type AlertaType = 'meta' | 'entrada' | 'saida';
+
 // ========================================
-// FUNÇÃO: Retorna ícone baseado no conteúdo do alerta
+// FUNÇÃO: Detecta tipo do alerta
 // ========================================
-const getAlertaIcon = (conteudo: string) => {
+const getAlertaType = (conteudo: string): AlertaType => {
   const content = conteudo.toLowerCase();
+  if (content.includes('retirou') || content.includes('saida')) return 'saida';
+  if (content.includes('adicionou')) return 'entrada';
+  return 'meta';
+};
 
-  // Ícone de saída (vermelho com seta para cima)
-  if (content.includes('saída') || content.includes('saida')) {
-    return (
-      <div className='w-12 h-12 rounded-full bg-red-50 border border-red-200 flex items-center justify-center flex-shrink-0'>
-        <ArrowUp className='text-red-600' size={20} />
-      </div>
-    );
+// ========================================
+// FUNÇÃO: Retorna título formatado do alerta
+// ========================================
+const getAlertaTitle = (type: AlertaType): string => {
+  switch (type) {
+    case 'saida':
+      return 'Saída registrada';
+    case 'entrada':
+      return 'Entrada registrada';
+    case 'meta':
+      return 'Nova meta criada';
   }
+};
 
-  // Ícone de entrada (verde com seta para baixo)
-  if (content.includes('entrada')) {
-    return (
-      <div className='w-12 h-12 rounded-full bg-green-50 border border-green-200 flex items-center justify-center flex-shrink-0'>
-        <ArrowDown className='text-green-600' size={20} />
-      </div>
-    );
+// ========================================
+// FUNÇÃO: Retorna ícone baseado no tipo do alerta
+// ========================================
+const getAlertaIcon = (type: AlertaType) => {
+  switch (type) {
+    case 'saida':
+      return (
+        <div className='w-12 h-12 rounded-full bg-red-50 flex items-center justify-center flex-shrink-0'>
+          <ArrowUpCircle className='text-[#EC1312]' size={22} />
+        </div>
+      );
+    case 'entrada':
+      return (
+        <div className='w-12 h-12 rounded-full bg-green-50 flex items-center justify-center flex-shrink-0'>
+          <ArrowDownCircle className='text-[#2D9E20]' size={22} />
+        </div>
+      );
+    case 'meta':
+      return (
+        <div
+          className='w-12 h-12 rounded-full bg-white flex items-center justify-center flex-shrink-0 p-[2px]'
+          style={{
+            background: 'linear-gradient(135deg, #6ADCC5, #0055FF)',
+            padding: '2px',
+          }}
+        >
+          <div className='w-full h-full rounded-full flex items-center justify-center'>
+            <Suitcase2 className='text-white' size={22} />
+          </div>
+        </div>
+      );
   }
+};
 
-  // Ícone de meta (azul com cofrinho)
-  if (content.includes('meta')) {
-    return (
-      <div className='w-12 h-12 rounded-full bg-blue-50 border border-blue-200 flex items-center justify-center flex-shrink-0'>
-        <PiggyBank className='text-blue-600' size={20} />
-      </div>
-    );
-  }
+// ========================================
+// FUNÇÃO: Formata o conteúdo com cores para valores monetários
+// ========================================
+const formatConteudoWithColors = (conteudo: string, type: AlertaType) => {
+  // Regex para encontrar valores monetários (R$ X,XX ou R$ X.XXX,XX)
+  const valorRegex = /(R\$\s?[\d.,]+)/g;
 
-  // Ícone padrão (azul com lâmpada)
-  return (
-    <div className='w-12 h-12 rounded-full bg-blue-50 border border-blue-200 flex items-center justify-center flex-shrink-0'>
-      <Lightbulb className='text-blue-600' size={20} />
-    </div>
-  );
+  const parts = conteudo.split(valorRegex);
+
+  return parts.map((part, index) => {
+    if (valorRegex.test(part)) {
+      const colorClass =
+        type === 'saida'
+          ? 'text-red-500'
+          : type === 'entrada'
+            ? 'text-green-500'
+            : 'text-primary';
+      return (
+        <span key={index} className={`font-semibold ${colorClass}`}>
+          {part}
+        </span>
+      );
+    }
+    return part;
+  });
 };
 
 // ========================================
@@ -179,7 +227,7 @@ export const AlertaModal = ({ open, onOpenChange }: AlertaModalProps) => {
       open={open}
       onOpenChange={onOpenChange}
       title='Notificações'
-      className='w-[95vw] h-full max-h-[80vh] overflow-y-auto'
+      className='w-[95vw] max-w-[700px] h-full max-h-[80vh] overflow-y-auto'
     >
       {/* ========================================
           BARRA DE FILTROS
@@ -256,7 +304,7 @@ export const AlertaModal = ({ open, onOpenChange }: AlertaModalProps) => {
         /* Estado: Sem alertas no total */
         <div className='flex flex-col items-center justify-center py-12 text-center'>
           <div className='w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mb-4'>
-            <Lightbulb size={32} className='text-gray-400' />
+            <Bell size={32} className='text-gray-400' />
           </div>
           <p className='text-gray-500 text-lg'>
             Nenhuma notificação no momento
@@ -269,7 +317,7 @@ export const AlertaModal = ({ open, onOpenChange }: AlertaModalProps) => {
         /* Estado: Sem alertas no período filtrado */
         <div className='flex flex-col items-center justify-center py-12 text-center'>
           <div className='w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mb-4'>
-            <Lightbulb size={32} className='text-gray-400' />
+            <Bell size={32} className='text-gray-400' />
           </div>
           <p className='text-gray-500 text-lg'>
             Nenhuma notificação neste período
@@ -294,63 +342,71 @@ export const AlertaModal = ({ open, onOpenChange }: AlertaModalProps) => {
 
               {/* Lista de alertas do grupo */}
               <div>
-                {group.alertas.map((alerta, index) => (
-                  <div
-                    key={alerta.id_alerta}
-                    className={`flex items-start gap-3 p-3 hover:bg-gray-50 transition-colors group ${
-                      index < group.alertas.length - 1
-                        ? 'border-b-2 border-b-[#EEF2F3]'
-                        : ''
-                    }`}
-                    style={{
-                      borderColor:
-                        index < group.alertas.length - 1
-                          ? '#EEF2F3' // Borda entre alertas
-                          : 'transparent',
-                    }}
-                  >
-                    {/* Ícone do alerta */}
-                    {getAlertaIcon(alerta.conteudo)}
+                {group.alertas.map((alerta, index) => {
+                  const alertaType = getAlertaType(alerta.conteudo);
+                  return (
+                    <div
+                      key={alerta.id_alerta}
+                      className='hover:bg-gray-50 transition-colors group'
+                    >
+                      {/* Borda entre alertas - ocupa 100% da largura */}
+                      {index < group.alertas.length - 1 && (
+                        <div className='absolute left-0 right-0 bottom-0 h-[2px] bg-[#EEF2F3]' />
+                      )}
 
-                    {/* Conteúdo do alerta */}
-                    <div className='flex-1 min-w-0'>
-                      <div className='flex items-start justify-between gap-2'>
-                        <div className='flex-1'>
-                          {/* Título do alerta (primeira frase) */}
-                          <p className='text-sm font-medium text-gray-900 break-words'>
-                            {alerta.conteudo.split('.')[0]}
+                      <div className='flex items-start gap-4 p-4 relative'>
+                        {/* Ícone do alerta */}
+                        {getAlertaIcon(alertaType)}
+
+                        {/* Conteúdo do alerta */}
+                        <div className='flex-1 min-w-0'>
+                          {/* Linha 1: Título + Data */}
+                          <div className='flex items-center gap-3 mb-1'>
+                            <h4 className='text-base font-semibold text-gray-900'>
+                              {getAlertaTitle(alertaType)}
+                            </h4>
+                            <span className='text-sm text-gray-500 whitespace-nowrap'>
+                              {getTimeAgo(alerta.data)}
+                            </span>
+                          </div>
+
+                          {/* Linha 2: Conteúdo */}
+                          <p className='text-base text-gray-600 break-words'>
+                            {formatConteudoWithColors(
+                              alerta.conteudo,
+                              alertaType
+                            )}
                           </p>
 
-                          {/* Descrição do alerta (demais frases) */}
-                          {alerta.conteudo.includes('.') && (
-                            <p className='text-sm text-gray-600 mt-1 break-words'>
-                              {alerta.conteudo
-                                .split('.')
-                                .slice(1)
-                                .join('.')
-                                .trim()}
-                            </p>
+                          {/* Link para metas (apenas para alertas de meta) */}
+                          {alertaType === 'meta' && (
+                            <Link
+                              href='/metas'
+                              className='text-primary font-medium text-base hover:underline mt-1 inline-block'
+                            >
+                              Ver metas
+                            </Link>
                           )}
                         </div>
 
-                        {/* Tempo relativo (ex: "30 mins atrás") */}
-                        <span className='text-xs text-gray-500 whitespace-nowrap'>
-                          {getTimeAgo(alerta.data)}
-                        </span>
+                        {/* Botão de marcar como lida */}
+                        <button
+                          onClick={() => handleMarkAsRead(alerta.id_alerta)}
+                          className='text-gray-400 hover:text-gray-600 transition-colors self-start'
+                          disabled={markAsRead.isPending}
+                          aria-label='Marcar como lida'
+                        >
+                          <X size={28} />
+                        </button>
                       </div>
-                    </div>
 
-                    {/* Botão de marcar como lida (aparece no hover) */}
-                    <button
-                      onClick={() => handleMarkAsRead(alerta.id_alerta)}
-                      className='text-gray-400 hover:text-gray-600 transition-colors opacity-0 group-hover:opacity-100'
-                      disabled={markAsRead.isPending}
-                      aria-label='Marcar como lida'
-                    >
-                      <X size={18} />
-                    </button>
-                  </div>
-                ))}
+                      {/* Borda inferior */}
+                      {index < group.alertas.length - 1 && (
+                        <div className='border-b-2 border-b-[#EEF2F3]' />
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             </div>
           ))}
