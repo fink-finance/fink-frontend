@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowLeft, Loader2 } from 'lucide-react';
 
 import { AccountCard, Bank } from './AccountCard';
@@ -20,7 +21,6 @@ function groupAccountsByBank(accounts: PluggyAccount[]): Bank[] {
       acc.institution?.id?.toString() ??
       bankName.toLowerCase().replace(/\s+/g, '-');
 
-    // Detecta Nubank
     const lower = bankName.toLowerCase();
     const isNubank = lower.includes('nubank') || lower.startsWith('nu ');
 
@@ -83,138 +83,151 @@ export function AccountsSection() {
   );
 
   return (
-    <div className='min-h-screen bg-[#F5F7F9]'>
-      <div className='max-w-6xl mx-auto px-6 py-8 space-y-6'>
+    <div className="min-h-screen bg-[#F5F7F9]">
+      <div className="max-w-6xl mx-auto px-6 py-8 space-y-6">
         {/* Topo */}
-        <div className='flex items-center justify-between gap-4'>
+        <div className="flex items-center justify-between gap-4">
           <Link
-            href='/profile'
-            className='inline-flex items-center gap-2 text-sm text-gray-500 hover:text-gray-800'
+            href="/profile"
+            className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-gray-800"
           >
-            <ArrowLeft className='w-4 h-4' />
+            <ArrowLeft className="w-4 h-4" />
             Voltar
           </Link>
 
-          <div className='flex-1'>
-            <h1 className='text-xl font-semibold text-gray-900'>
+          <div className="flex-1">
+            <h1 className="text-xl font-semibold text-gray-900">
               Minhas contas
             </h1>
-            <p className='text-sm text-gray-500'>
+            <p className="text-sm text-gray-500">
               Todas as suas contas em um só lugar
             </p>
           </div>
 
-          <button className='inline-flex items-center gap-2 rounded-full bg-blue-600 text-white text-sm font-medium px-4 py-2 shadow-sm hover:bg-blue-700'>
+          <button className="inline-flex items-center gap-2 rounded-full bg-blue-600 text-white text-sm font-medium px-4 py-2 shadow-sm hover:bg-blue-700">
             Nova conta
           </button>
         </div>
 
         {/* Loading */}
         {isLoading && (
-          <div className='mt-8 flex items-center justify-center text-sm text-slate-500'>
-            <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+          <div className="mt-8 flex items-center justify-center text-sm text-slate-500">
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
             Carregando contas...
           </div>
         )}
 
         {/* Erro */}
         {isError && !isLoading && (
-          <div className='mt-8 text-sm text-red-500'>
+          <div className="mt-8 text-sm text-red-500">
             Não foi possível carregar suas contas agora.
           </div>
         )}
 
         {/* Conteúdo */}
         {!isLoading && !isError && (
-          <div className='flex flex-col lg:flex-row gap-6 items-start'>
+          <div className="flex flex-col lg:flex-row gap-6 items-start">
             {/* Painel lateral */}
-            <aside className='w-full lg:w-80 rounded-3xl bg-white border border-gray-100 shadow-sm px-6 py-6 flex flex-col gap-5'>
-              <div className='flex items-center gap-4'>
-                <div className='w-12 h-12 rounded-full bg-gray-200 overflow-hidden' />
+            <aside className="w-full lg:w-80 rounded-3xl bg-white border border-gray-100 shadow-sm px-6 py-6 flex flex-col gap-5">
+              <div className="flex items-center gap-4">
+                {/* FOTO DE PERFIL */}
+                <div className="w-14 h-14 rounded-full overflow-hidden bg-gray-200">
+                  <Image
+                    src="/images/profile/Foto Gabriel.jpg"
+                    alt="Foto de perfil"
+                    width={56}
+                    height={56}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
                 <div>
-                  <p className='text-sm font-semibold text-gray-900'>
+                  <p className="text-sm font-semibold text-gray-900">
                     Gabriel Bezerra de Andrade
                   </p>
-                  <p className='text-xs text-gray-500'>120.919.084-28</p>
+                  <p className="text-xs text-gray-500">120.919.084-28</p>
                 </div>
               </div>
 
-              <div className='flex items-center justify-between text-xs text-gray-500'>
+              <div className="flex items-center justify-between text-xs text-gray-500">
                 <span>Contas cadastradas</span>
-                <span className='font-medium text-gray-900'>
+                <span className="font-medium text-gray-900">
                   {totalAccounts} conta{totalAccounts === 1 ? '' : 's'}
                 </span>
               </div>
 
               {/* Ativas */}
-              <section className='border-t border-gray-100 pt-4 space-y-3'>
-                <div className='flex items-center justify-between text-xs text-gray-500'>
-                  <div className='flex items-center gap-2'>
-                    <div className='w-6 h-6 rounded-full bg-blue-50 flex items-center justify-center text-[11px] text-blue-500'>
+              <section className="border-t border-gray-100 pt-4 space-y-3">
+                <div className="flex items-center justify-between text-xs text-gray-500">
+                  <div className="flex items-center gap-2">
+                    <div className="w-6 h-6 rounded-full bg-blue-50 flex items-center justify-center text-[11px] text-blue-500">
                       ✦
                     </div>
                     <span>Contas ativas</span>
                   </div>
-                  <span className='font-medium text-gray-900'>
+                  <span className="font-medium text-gray-900">
                     {activeAccounts.length} conta
                     {activeAccounts.length === 1 ? '' : 's'}
                   </span>
                 </div>
 
-                <div className='space-y-2 text-xs'>
+                <div className="space-y-2 text-xs">
                   {activeAccounts.slice(0, 3).map((acc) => (
-                    <div key={acc.id} className='flex justify-between'>
+                    <div key={acc.id} className="flex justify-between">
                       <div>
-                        <p className='font-medium text-gray-900'>
+                        <p className="font-medium text-gray-900">
                           {acc.institution?.name ?? acc.name ?? 'Conta'}
                         </p>
-                        <p className='text-gray-500'>{acc.type ?? 'Conta'}</p>
+                        <p className="text-gray-500">
+                          {acc.type ?? 'Conta'}
+                        </p>
                       </div>
                     </div>
                   ))}
                   {activeAccounts.length === 0 && (
-                    <p className='text-gray-400'>Nenhuma conta ativa.</p>
+                    <p className="text-gray-400">Nenhuma conta ativa.</p>
                   )}
                 </div>
               </section>
 
               {/* Inativas */}
-              <section className='border-t border-gray-100 pt-4 space-y-3'>
-                <div className='flex items-center justify-between text-xs text-gray-500'>
-                  <div className='flex items-center gap-2'>
-                    <div className='w-6 h-6 rounded-full bg-gray-100 flex items-center justify-center text-[11px] text-gray-500'>
+              <section className="border-t border-gray-100 pt-4 space-y-3">
+                <div className="flex items-center justify-between text-xs text-gray-500">
+                  <div className="flex items-center gap-2">
+                    <div className="w-6 h-6 rounded-full bg-gray-100 flex items-center justify-center text-[11px] text-gray-500">
                       ⏻
                     </div>
                     <span>Contas inativas</span>
                   </div>
-                  <span className='font-medium text-gray-900'>
+                  <span className="font-medium text-gray-900">
                     {inactiveAccounts.length} conta
                     {inactiveAccounts.length === 1 ? '' : 's'}
                   </span>
                 </div>
 
-                <div className='space-y-2 text-xs'>
+                <div className="space-y-2 text-xs">
                   {inactiveAccounts.slice(0, 3).map((acc) => (
-                    <div key={acc.id} className='flex justify-between'>
+                    <div key={acc.id} className="flex justify-between">
                       <div>
-                        <p className='font-medium text-gray-900'>
+                        <p className="font-medium text-gray-900">
                           {acc.institution?.name ?? acc.name ?? 'Conta'}
                         </p>
-                        <p className='text-gray-500'>{acc.type ?? 'Conta'}</p>
+                        <p className="text-gray-500">
+                          {acc.type ?? 'Conta'}
+                        </p>
                       </div>
                     </div>
                   ))}
                   {inactiveAccounts.length === 0 && (
-                    <p className='text-gray-400'>Nenhuma conta inativa.</p>
+                    <p className="text-gray-400">Nenhuma conta inativa.</p>
                   )}
                 </div>
               </section>
             </aside>
 
             {/* Lista de bancos e cartões */}
-            <main className='flex-1 space-y-4 w-full'>
+            <main className="flex-1 space-y-4 w-full">
               {banks.length === 0 && (
-                <div className='text-sm text-slate-500'>
+                <div className="text-sm text-slate-500">
                   Nenhuma conta conectada ainda.
                 </div>
               )}

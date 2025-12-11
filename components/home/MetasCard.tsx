@@ -4,7 +4,6 @@ import { useMetas } from '@/lib/hooks/metas';
 import { MetaStatus } from '@/lib/api/types/meta';
 import { DashboardCard } from '../shared/DashboardCard';
 import { SpinLoader } from '../shared/SpinLoader';
-import { redirect } from 'next/navigation';
 import { MetaCard } from '../metas/MetaCard';
 
 export const MetasCard = () => {
@@ -18,32 +17,31 @@ export const MetasCard = () => {
 
   return (
     <DashboardCard
-      title='Minhas metas'
-      subtitle='O quão perto você está de realizar seus sonhos'
-      className='h-full'
-      onClick={() => {
-        redirect('/metas');
-      }}
+      title="Minhas metas"
+      subtitle="O quão perto você está de realizar seus sonhos"
+      className="h-full"
+      hasArrow
+      arrowHref="/metas"
     >
       {isLoading && (
-        <div className='flex justify-center items-center h-32'>
+        <div className="flex justify-center items-center h-32">
           <SpinLoader />
         </div>
       )}
 
       {isError && (
-        <div className='flex justify-center items-center h-32'>
-          <p className='text-destructive'>Erro ao carregar metas.</p>
+        <div className="flex justify-center items-center h-32">
+          <p className="text-destructive">Erro ao carregar metas.</p>
         </div>
       )}
 
       {filteredMetas && filteredMetas.length > 0 && (
-        <div className='flex flex-col gap-4 overflow-auto min-h-0 pt-4'>
+        <div className="flex flex-col gap-4 overflow-auto min-h-0 pt-4">
           {filteredMetas.map((meta) => (
             <MetaCard
               key={meta.id_meta}
               meta={meta}
-              className='h-full border border-[#E7EBEE] shadow-none'
+              className="h-full border border-[#E7EBEE] shadow-none"
               dashboard={true}
             />
           ))}
@@ -51,8 +49,8 @@ export const MetasCard = () => {
       )}
 
       {filteredMetas && filteredMetas.length === 0 && (
-        <div className='flex justify-center items-center h-32'>
-          <p className='text-muted-foreground'>Nenhuma meta cadastrada.</p>
+        <div className="flex justify-center items-center h-32">
+          <p className="text-muted-foreground">Nenhuma meta cadastrada.</p>
         </div>
       )}
     </DashboardCard>
