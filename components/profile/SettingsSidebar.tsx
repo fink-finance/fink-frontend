@@ -1,3 +1,4 @@
+// SettingsSidebar.tsx
 import { Card } from '@/components/ui/card';
 import { SettingsItem } from './SettingsItem';
 import { FiRefreshCw, FiLogOut } from 'react-icons/fi';
@@ -16,70 +17,38 @@ export function SettingsSidebar({
   onLogout,
 }: SettingsSidebarProps) {
   return (
-    <div className='space-y-6'>
-      <Card className='bg-white shadow-sm p-6'>
-        <div className='mb-6'>
-          <h3
-            className='text-[20px] mb-1'
-            style={{
-              fontFamily: 'Bitter',
-              fontWeight: 600,
-              color: '#000000',
-            }}
-          >
+    <div className="space-y-6">
+      <Card className="bg-white p-6 shadow-sm">
+        <div className="mb-6">
+          <h3 className="mb-1 text-2xl font-semibold text-slate-900">
             Configurações
           </h3>
-          <p
-            className='text-base'
-            style={{
-              fontFamily: 'DM Sans',
-              fontWeight: 400,
-              color: '#808088',
-            }}
-          >
+          <p className="text-sm text-slate-600">
             Personalize sua gestão financeira
           </p>
         </div>
 
-        <div className='space-y-3'>
+        <div className="space-y-3">
           {settingsItems.map((item) => (
             <SettingsItem key={item.title} {...item} />
           ))}
         </div>
       </Card>
 
-      <Card className='bg-white shadow-sm p-6'>
-        <button className='w-full flex items-center gap-3 text-left hover:opacity-70 transition-opacity py-2'>
-          <FiRefreshCw className='text-[#000000]' size={20} />
-          <span
-            className='text-base'
-            style={{
-              fontFamily: 'DM Sans',
-              fontWeight: 400,
-              color: '#000000',
-            }}
-          >
-            Trocar de conta
-          </span>
+      <Card className="bg-white p-6 shadow-sm">
+        <button className="flex w-full items-center gap-3 py-2 text-left text-sm text-slate-900 transition-opacity hover:opacity-70">
+          <FiRefreshCw className="text-slate-900" size={20} />
+          <span>Trocar de conta</span>
         </button>
 
-        <div className='border-t border-[#E7EBEE] my-4' />
+        <div className="my-4 border-t border-[#E7EBEE]" />
 
         <button
           onClick={onLogout}
-          className='w-full flex items-center gap-3 text-left hover:opacity-70 transition-opacity py-2'
+          className="flex w-full items-center gap-3 py-2 text-left text-sm text-red-600 transition-opacity hover:opacity-70"
         >
-          <FiLogOut className='text-destructive' size={20} />
-          <span
-            className='text-base'
-            style={{
-              fontFamily: 'DM Sans',
-              fontWeight: 400,
-              color: 'hsl(var(--destructive))',
-            }}
-          >
-            Sair
-          </span>
+          <FiLogOut className="text-red-600" size={20} />
+          <span>Sair</span>
         </button>
       </Card>
     </div>

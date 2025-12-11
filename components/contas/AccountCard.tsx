@@ -15,8 +15,8 @@ export type BankAccount = {
 export type Bank = {
   id: string;
   name: string;
-  logoUrl?: string; // ← ADICIONADO
-  logoInitials?: string; // ← fallback
+  logoUrl?: string;
+  logoInitials?: string; // fallback
   logoBgClass: string;
   branch: string;
   totalAccounts: number;
@@ -29,63 +29,71 @@ type AccountCardProps = {
 
 const statusStyles: Record<AccountStatus, string> = {
   active: 'bg-blue-50 text-blue-600 border-blue-100',
-  inactive: 'bg-gray-50 text-gray-500 border-gray-200',
+  inactive: 'bg-slate-50 text-slate-500 border-slate-200',
 };
 
 export function AccountCard({ bank }: AccountCardProps) {
   return (
-    <section className='rounded-3xl bg-white border border-gray-100 shadow-sm px-6 py-5 flex flex-col gap-4'>
+    <section className="flex flex-col gap-5 rounded-3xl border border-slate-100 bg-white px-6 py-6 shadow-sm">
       {/* Cabeçalho */}
-      <header className='flex items-center gap-3'>
+      <header className="flex items-center gap-3">
         {/* LOGO */}
         <div
-          className={`w-9 h-9 rounded-full flex items-center justify-center overflow-hidden ${bank.logoBgClass}`}
+          className={`flex h-11 w-11 items-center justify-center overflow-hidden rounded-full ${bank.logoBgClass}`}
         >
           {bank.logoUrl ? (
-            <Image src={bank.logoUrl} width={32} height={32} alt={bank.name} />
+            <Image
+              src={bank.logoUrl}
+              width={44}
+              height={44}
+              alt={bank.name}
+              className="h-full w-full object-cover"
+            />
           ) : (
-            <span className='text-xs font-semibold text-white'>
+            <span className="text-sm font-semibold text-white">
               {bank.logoInitials}
             </span>
           )}
         </div>
 
-        <div className='flex flex-col'>
-          <span className='text-sm font-semibold text-gray-900'>
+        <div className="flex flex-col">
+          <span className="text-lg font-semibold text-slate-900">
             {bank.name}
           </span>
-          <span className='text-xs text-gray-500'>
-            {bank.totalAccounts} conta{bank.totalAccounts > 1 ? 's' : ''} | Ag.{' '}
-            {bank.branch}
+          <span className="text-base text-slate-600">
+            {bank.totalAccounts} conta
+            {bank.totalAccounts > 1 ? 's' : ''} • Ag. {bank.branch}
           </span>
         </div>
       </header>
 
       {/* Contas do banco */}
-      <div className='flex flex-col md:flex-row gap-3'>
+      <div className="flex flex-col gap-3 md:flex-row">
         {bank.accounts.map((account) => (
           <div
             key={account.id}
-            className='flex-1 min-w-[220px] rounded-2xl border border-gray-100 bg-gray-50/50 px-4 py-3 flex items-center justify-between gap-3'
+            className="flex min-w-[260px] flex-1 items-center justify-between gap-4 rounded-2xl border border-slate-100 bg-slate-50/60 px-5 py-4"
           >
-            <div className='flex flex-col'>
-              <div className='flex items-center gap-1 text-sm font-medium text-gray-900'>
+            <div className="flex flex-col">
+              <div className="flex items-center gap-1 text-lg font-medium text-slate-900">
                 <span>{account.number}</span>
                 {account.favorite && (
-                  <span className='text-xs text-blue-500'>★</span>
+                  <span className="text-sm text-blue-500">★</span>
                 )}
               </div>
-              <span className='text-xs text-gray-500'>{account.type}</span>
+              <span className="text-base text-slate-600">
+                {account.type}
+              </span>
             </div>
 
-            <div className='flex items-center gap-2'>
+            <div className="flex items-center gap-2">
               <span
-                className={`inline-flex items-center rounded-full border px-3 py-1 text-[11px] font-medium ${statusStyles[account.status]}`}
+                className={`inline-flex items-center rounded-full border px-3 py-1.5 text-sm font-semibold ${statusStyles[account.status]}`}
               >
                 {account.status === 'active' ? 'Ativa' : 'Inativa'}
               </span>
-              <button className='p-1.5 rounded-full hover:bg-gray-100'>
-                <MoreHorizontal className='w-4 h-4 text-gray-500' />
+              <button className="rounded-full p-2 hover:bg-slate-100">
+                <MoreHorizontal className="h-5 w-5 text-slate-500" />
               </button>
             </div>
           </div>

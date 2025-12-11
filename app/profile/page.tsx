@@ -28,7 +28,7 @@ export default function ProfilePage() {
   const userData = {
     nome: user?.nome || ' Gabriel Bezerra de Andrade',
     idade: 21,
-    cpf: '120.919.084-28',
+    cpf: '123.456.789-10',
     email: 'gabrielbandrade@gmail.com',
     telefone: '+55 (81) 99144-2226',
     genero: 'Homem Cis',
@@ -152,12 +152,10 @@ export default function ProfilePage() {
             >
               {getFormattedDate(new Date())}
             </p>
-            <h1
-              className='text-4xl font-medium text-foreground'
-              style={{ fontFamily: 'Bitter' }}
-            >
+            <h1 className="text-3xl font-semibold text-slate-900">
               Perfil Finker
             </h1>
+
           </div>
 
           <div className='flex flex-col lg:flex-row gap-6 items-start'>
