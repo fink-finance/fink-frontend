@@ -28,12 +28,16 @@ export const useAlertas = (lida?: boolean) => {
       // Backend identifica usuário pelo token
       // Endpoint retorna apenas alertas não lidos por padrão
       const url = API_ENDPOINTS.ALERTAS.LIST;
-      return api.get<Alerta[]>(url);
+      const response = await api.get<Alerta[]>(url);
+      return response;
     },
-    // Configurações opcionais
-    staleTime: 1 * 60 * 1000, // 1 minuto (alertas devem ser atualizados frequentemente)
+    // Configurações para atualização em tempo real
+    staleTime: 0, // Sempre considerar dados como "stale" para refetch
     gcTime: 5 * 60 * 1000, // 5 minutos
-    refetchInterval: 2 * 60 * 1000, // Refetch a cada 2 minutos
+    refetchInterval: 30 * 1000, // Refetch a cada 30 segundos
+    refetchOnWindowFocus: true, // Refetch quando a janela ganhar foco
+    refetchOnMount: true, // Refetch ao montar o componente
+    refetchOnReconnect: true, // Refetch ao reconectar
   });
 };
 

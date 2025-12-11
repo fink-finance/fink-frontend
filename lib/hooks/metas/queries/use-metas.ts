@@ -16,7 +16,8 @@ export const metasKeys = {
   details: () => [...metasKeys.all, 'detail'] as const,
   detail: (id: number) => [...metasKeys.details(), id] as const,
   movimentacoes: () => [...metasKeys.all, 'movimentacoes'] as const,
-  movimentacoesByMeta: (id: number) => [...metasKeys.movimentacoes(), id] as const,
+  movimentacoesByMeta: (id: number) =>
+    [...metasKeys.movimentacoes(), id] as const,
 };
 
 // ✅ Hook para listar metas do usuário autenticado
@@ -26,7 +27,19 @@ export const useMetas = (filters?: MetasFilters) => {
     queryFn: async (): Promise<Meta[]> => {
       // ✅ Backend identifica usuário pelo token
       const url = API_ENDPOINTS.METAS.LIST;
-      return api.get<Meta[]>(url);
+      console.log('[useMetas] 📡 Iniciando requisição GET metas');
+      console.log('[useMetas] URL:', url);
+      console.log('[useMetas] Filters:', filters);
+
+      try {
+        const response = await api.get<Meta[]>(url);
+        console.log('[useMetas] ✅ Resposta recebida:', response);
+        console.log('[useMetas] Total de metas:', response?.length || 0);
+        return response;
+      } catch (error) {
+        console.error('[useMetas] ❌ Erro na requisição:', error);
+        throw error;
+      }
     },
     // Configurações opcionais
     staleTime: 5 * 60 * 1000, // 5 minutos
