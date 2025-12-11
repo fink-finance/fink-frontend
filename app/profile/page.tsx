@@ -22,11 +22,11 @@ import { getFormattedDate } from '@/lib/utils/get-formatted-date';
 import { useRouter } from 'next/navigation';
 
 export default function ProfilePage() {
-  const { user, logout } = useAuth();
+  const { session, logout } = useAuth();
   const router = useRouter();
 
   const userData = {
-    nome: user?.nome || ' Gabriel Bezerra de Andrade',
+    nome: 'Gabriel Bezerra de Andrade',
     idade: 21,
     cpf: '123.456.789-10',
     email: 'gabrielbandrade@gmail.com',
@@ -152,10 +152,9 @@ export default function ProfilePage() {
             >
               {getFormattedDate(new Date())}
             </p>
-            <h1 className="text-3xl font-semibold text-slate-900">
+            <h1 className='text-3xl font-semibold text-slate-900'>
               Perfil Finker
             </h1>
-
           </div>
 
           <div className='flex flex-col lg:flex-row gap-6 items-start'>
